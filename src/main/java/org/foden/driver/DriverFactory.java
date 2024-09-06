@@ -2,6 +2,8 @@ package org.foden.driver;
 
 import com.google.common.util.concurrent.Uninterruptibles;
 import io.github.bonigarcia.wdm.WebDriverManager;
+import org.foden.enums.ConfigProperties;
+import org.foden.utils.PropertyUtils;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.chrome.ChromeDriver;
 import org.openqa.selenium.chrome.ChromeOptions;
@@ -34,7 +36,7 @@ public final class DriverFactory {
                 case "chrome":
                     if (osName != null && osName.equalsIgnoreCase("linux")){
                         try{
-                            String chromeDriverURL = "http://0.0.0.0:4444/wd/hub"; //TODO: setup selenium grid
+                            String chromeDriverURL = PropertyUtils.get(ConfigProperties.GRIDURL);
                             URL chromeUrl = new URL(chromeDriverURL);
                             System.out.println("chromeUrl----" + chromeUrl);
                             return new RemoteWebDriver(chromeUrl, setChromeCapability());
