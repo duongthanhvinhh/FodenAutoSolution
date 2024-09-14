@@ -39,7 +39,7 @@ public class AllureListener implements ITestListener{
 
     @Override
     public void onFinish(ITestContext iTestContext){
-        Log4jUtils.info("I am in onFinish method" + iTestContext.getName());
+        Log4jUtils.info("I am in onFinish method " + iTestContext.getName());
     }
 
     @Override

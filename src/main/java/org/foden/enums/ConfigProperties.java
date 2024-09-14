@@ -3,5 +3,6 @@ package org.foden.enums;
 public enum ConfigProperties {
     BROWSER,
     GRIDURL,
-    URL
+    URL,
+    SCREENSHOTALLSTEPS
 }

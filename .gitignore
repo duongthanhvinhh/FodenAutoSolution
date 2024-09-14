@@ -37,4 +37,5 @@ build/
 ### Mac OS ###
 .DS_Store
 target
-allure-results
+allure-results1
+allure-results-prior-run1

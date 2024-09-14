@@ -1,0 +1,1 @@
+{"uuid":"cc744fd2-83b8-4574-b160-7a6407ee88f5","name":"org.foden.tests.BaseTest.setUp","children":["547841bc-8c67-402a-9d7c-27fdbdd3df1b"],"description":"","befores":[{"name":"setUp","status":"passed","stage":"finished","description":"","steps":[],"attachments":[],"parameters":[],"start":1726336710376,"stop":1726336714501}],"afters":[],"start":1726336710376,"stop":1726336714501}
