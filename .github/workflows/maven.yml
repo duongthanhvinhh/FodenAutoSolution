@@ -27,12 +27,13 @@ jobs:
         java-version: '17'
         distribution: 'temurin'
         cache: maven
-    - name: Start Selenium Hub
-      run: docker run -d --name selenium-hub selenium/standalone-chrome
-    - name: Start Chrome Node
+    - name: Pull Selenium Node Image
+      run: docker pull selenium/node-chrome
+    - name: Start Selenium Grid
       run: |
+        docker run -d --name selenium-hub selenium/standalone-chrome
         docker run -d --name chrome-node \
-          -e SE_EVENT_BUS_HOST=selenium-hub \  # Gán giá trị cho SE_EVENT_BUS_HOST
+          -e SE_EVENT_BUS_HOST=selenium-hub \
           --link selenium-hub:hub \
           selenium/node-chrome
     - name: Verify Container Existence
