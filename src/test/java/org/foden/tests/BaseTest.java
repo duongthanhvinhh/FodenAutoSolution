@@ -21,8 +21,17 @@ public class BaseTest {
     private String story;
     @BeforeClass
     public void cleanFolder() {
-        String allureDirPath = System.getProperty("user.dir") + "\\allure-results";
-        String allurePrioRunDirPath = System.getProperty("user.dir") + "\\allure-results-prior-run";
+        String allureDirPath;
+        String allurePrioRunDirPath;
+        String osName = System.getProperty("os.name");
+        if (osName.equalsIgnoreCase("linux")){
+            allureDirPath = System.getProperty("user.dir") + "/allure-results";
+            allurePrioRunDirPath = System.getProperty("user.dir") + "/allure-results-prior-run";
+        } else {
+            allureDirPath = System.getProperty("user.dir") + "\\allure-results";
+            allurePrioRunDirPath = System.getProperty("user.dir") + "\\allure-results-prior-run";
+        }
+
 
         FileDirectoryUtils.cleanDirectory(allurePrioRunDirPath);
         FileDirectoryUtils.copyDirectory(allureDirPath, allurePrioRunDirPath);
