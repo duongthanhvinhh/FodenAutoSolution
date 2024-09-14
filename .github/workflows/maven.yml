@@ -27,8 +27,6 @@ jobs:
         java-version: '17'
         distribution: 'temurin'
         cache: maven
-    - name: Add aspectjweaver dependency
-      run: mvn dependency:add-dependency -DgroupId=org.aspectj -DartifactId=aspectjweaver -Dversion=1.9.19
     - name: Build with Maven
       run: mvn -B package --file pom.xml
 
