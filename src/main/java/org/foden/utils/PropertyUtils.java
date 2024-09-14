@@ -39,12 +39,6 @@ public final class PropertyUtils {
         }
     }
 
-    /**
-     * Get string.
-     *
-     * @param key the key
-     * @return the string
-     */
     public static String get(ConfigProperties key) {
         if (Objects.isNull(key) || Objects.isNull(CONFIGMAP.get(key.name().toLowerCase()))){
             try {

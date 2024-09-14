@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE suite SYSTEM "http://testng.org/testng-1.0.dtd">
+<suite name="Suite" data-provider-thread-count="9" >
+    <listeners>
+        <listener class-name="org.foden.listeners.AllureListener"/>
+    </listeners>
+    <test verbose="2" preserve-order="true" name="Test" thread-count="5" parallel="methods">
+        <classes>
+            <class name="org.foden.tests.LoginTest"/>
+        </classes>
+    </test>
+</suite>
