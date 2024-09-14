@@ -27,9 +27,15 @@ jobs:
         java-version: '17'
         distribution: 'temurin'
         cache: maven
+    - name: Check Chrome Version (Optional)
+      run: docker exec chrome-node bash -c 'chromedriver --version'
     - name: Start Selenium Grid
       run: |
         docker run -d --name selenium-hub selenium/standalone-chrome
         docker run -d --name chrome-node --link selenium-hub:hub selenium/node-chrome
     - name: Build with Maven
       run: mvn clean install
+    - name: Check Selenium Hub Logs
+      run: docker logs selenium-hub
+    - name: Check Chrome Node Logs
+      run: docker logs chrome-node
