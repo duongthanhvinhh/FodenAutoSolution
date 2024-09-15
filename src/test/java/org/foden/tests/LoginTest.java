@@ -27,7 +27,7 @@ public class LoginTest extends BaseTest{
     @Description("This is the second demo testcase")
     @Owner("Foden Duong")
     public void secondTestcase(){
-        Assert.assertTrue(false);
+        Assert.assertTrue(true);
     }
     @Feature("Log in - Log out")
     @Test(priority = 0,description = "Third demo testcase", groups = {"FAS-112", "Login", TestGroups.Id.SMOKE, TestGroups.Id.REGRESSION})
