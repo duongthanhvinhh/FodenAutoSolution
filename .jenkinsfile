@@ -1,0 +1,37 @@
+pipeline {
+    agent any
+    tools {
+      maven 'MAVEN_HOME' // Replace with your Maven version
+    }
+    stages {
+        stage('Init Selenium Grid') {
+            steps {
+                powershell '''
+                  docker-compose up -d
+                '''
+            }
+        }
+        stage('Selenium Grid Up') {
+            steps {
+                powershell '''
+                  python check_container_status.py
+                '''
+            }
+        }
+        stage('Run Tests') {
+            steps {
+                powershell '''
+                  mvn clean test
+                '''
+                // sh 'mvn test'
+            }
+        }
+        stage('Kill Selenium Grid') {
+            steps {
+                powershell '''
+                  docker-compose down
+                '''
+            }
+        }
+    }
+}

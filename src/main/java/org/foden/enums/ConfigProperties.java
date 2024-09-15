@@ -4,5 +4,6 @@ public enum ConfigProperties {
     BROWSER,
     GRIDURL,
     URL,
-    SCREENSHOTALLSTEPS
+    SCREENSHOTALLSTEPS,
+    USESELENIUMGRID
 }
