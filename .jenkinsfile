@@ -20,17 +20,25 @@ pipeline {
         }
         stage('Run Tests') {
             steps {
-                powershell '''
-                  mvn clean test
-                '''
-                // sh 'mvn test'
+                script {
+                    def mvnResult = powershell('''
+                        mvn clean test
+                    ''')
+                }
             }
-        }
-        stage('Kill Selenium Grid') {
-            steps {
-                powershell '''
-                  docker-compose down
-                '''
+            post {
+                always {
+                    powershell '''
+                        docker-compose down
+                    '''
+                    allure([
+                        includeProperties: false,
+                        jdk: '',
+                        properties: [],
+                        reportBuildPolicy: 'ALWAYS',
+                        results: [[path: 'target/allure-results']]
+                    ])
+                }
             }
         }
     }

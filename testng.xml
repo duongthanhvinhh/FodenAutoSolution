@@ -4,7 +4,7 @@
     <listeners>
         <listener class-name="org.foden.listeners.AllureListener"/>
     </listeners>
-    <test verbose="2" preserve-order="true" name="Test" thread-count="5" parallel="methods">
+    <test verbose="2" preserve-order="true" name="Test" thread-count="3" parallel="methods">
         <classes>
             <class name="org.foden.tests.LoginTest"/>
         </classes>

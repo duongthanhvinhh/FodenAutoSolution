@@ -102,7 +102,7 @@
                         <argLine>
                             -javaagent:"${settings.localRepository}/org/aspectj/aspectjweaver/1.9.19/aspectjweaver-1.9.19.jar"
                         </argLine>
-                        <testFailureIgnore>true</testFailureIgnore>
+                        <testFailureIgnore>false</testFailureIgnore>
                         <systemPropertyVariables>
                             <allure.results.directory>allure-results</allure.results.directory>
                         </systemPropertyVariables>
