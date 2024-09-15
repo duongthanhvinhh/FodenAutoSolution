@@ -51,12 +51,12 @@ public class BaseTest {
         }
     }
 
-    @BeforeMethod
+    @BeforeMethod(alwaysRun = true)
     protected synchronized void setUp(){
         Driver.initDriver();
     }
 
-    @AfterMethod
+    @AfterMethod(alwaysRun = true)
     protected synchronized void tearDown(){
         Driver.quitDriver();
     }

@@ -34,7 +34,7 @@ public final class DriverFactory {
             switch (browser.toLowerCase()){
                 case "edge":
                 case "chrome":
-                    if (osName != null && osName.equalsIgnoreCase("linux")){
+                    if ((osName != null && osName.equalsIgnoreCase("linux")) || Objects.equals(PropertyUtils.get(ConfigProperties.USESELENIUMGRID), "yes")){
                         try{
                             String chromeDriverURL = PropertyUtils.get(ConfigProperties.GRIDURL);
                             URL chromeUrl = new URL(chromeDriverURL);
