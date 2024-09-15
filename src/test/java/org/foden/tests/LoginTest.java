@@ -27,7 +27,7 @@ public class LoginTest extends BaseTest{
     @Description("This is the second demo testcase")
     @Owner("Foden Duong")
     public void secondTestcase(){
-        Assert.assertTrue(true);
+        Assert.assertTrue(false);
     }
     @Feature("Log in - Log out")
     @Test(priority = 0,description = "Third demo testcase", groups = {"FAS-112", "Login", TestGroups.Id.SMOKE, TestGroups.Id.REGRESSION})
@@ -36,6 +36,26 @@ public class LoginTest extends BaseTest{
     @Description("This is the third demo testcase")
     @Owner("Foden Duong")
     public void thirdTestcase(){
+        Assert.assertTrue(true);
+    }
+    
+    @Feature("Log in - Log out")
+    @Test(priority = 0,description = "Fourth demo testcase", groups = {"FAS-113", "Login", TestGroups.Id.SMOKE, TestGroups.Id.REGRESSION})
+    @Story("FAS-113")
+    @Severity(SeverityLevel.NORMAL)
+    @Description("This is the 4th demo testcase")
+    @Owner("Foden Duong")
+    public void fourthTestcase(){
+        Assert.assertTrue(true);
+    }
+
+    @Feature("Log in - Log out")
+    @Test(priority = 0,description = "Fifth demo testcase", groups = {"FAS-114", "Login", TestGroups.Id.SMOKE, TestGroups.Id.REGRESSION})
+    @Story("FAS-114")
+    @Severity(SeverityLevel.NORMAL)
+    @Description("This is the 5th demo testcase")
+    @Owner("Foden Duong")
+    public void fifthTestcase(){
         Assert.assertTrue(true);
     }
 
