@@ -2,6 +2,7 @@ package org.foden.tests;
 
 import io.qameta.allure.*;
 import org.foden.enums.TestGroups;
+import org.foden.pages.LoginPage;
 import org.testng.Assert;
 import org.testng.annotations.Listeners;
 import org.testng.annotations.Test;
@@ -18,7 +19,8 @@ public class LoginTest extends BaseTest{
     @Description("This is the first demo testcase")
     @Owner("Foden Duong")
     public void firstTestcase(){
-        Assert.assertTrue(true);
+        LoginPage.getInstance().goToLoginPage();
+        LoginPage.getInstance().login("foden1706@gmail.com", "Password@01");
     }
     @Feature("Log in - Log out")
     @Test(priority = 0,description = "Second demo testcase", groups = {"FAS-111", "Login", TestGroups.Id.SMOKE, TestGroups.Id.REGRESSION})

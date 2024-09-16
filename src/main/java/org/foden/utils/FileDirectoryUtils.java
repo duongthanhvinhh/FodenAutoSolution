@@ -165,4 +165,12 @@ public class FileDirectoryUtils {
         }
     }
 
+    public static String getDownloadPath(){
+        String osName = System.getProperty("os.name");
+        String downloadPath= System.getProperty("user.dir")+File.separator+"downloaded"+File.separator;
+        if(osName.equalsIgnoreCase("linux"))
+            downloadPath=File.separator+"home"+File.separator+"ubuntu"+File.separator+"downloads"+File.separator+"seluser"+File.separator+"Downloads"+File.separator;
+        return downloadPath;
+    }
+
 }
