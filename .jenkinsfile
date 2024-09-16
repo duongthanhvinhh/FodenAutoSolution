@@ -26,6 +26,10 @@ pipeline {
         stage('Start Selenium Grid') {
             steps {
                 powershell '''
+                    # Start Docker Desktop
+                    python start_docker_desktop.py
+                '''                
+                powershell '''
                     # Start Selenium Grid using Docker Compose
                     docker-compose up -d
                 '''
@@ -64,7 +68,10 @@ pipeline {
                     # Stop Docker containers and clean up
                     docker-compose down
                 '''
-                
+                powershell '''
+                    # Stop Docker Desktop
+                    python stop_docker_desktop.py
+                '''                
                 // Publish Allure report
                 allure([
                     includeProperties: false,
