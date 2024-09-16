@@ -1,44 +1,85 @@
 pipeline {
     agent any
+    parameters {
+        string(name: 'StoryId', defaultValue: '', description: 'Input User Story Id: ')
+        string(name: 'XmlSuite', defaultValue: '', description: 'Test Suite: (i.e testng)')
+    }
     tools {
-      maven 'MAVEN_HOME' // Replace with your Maven version
+        maven 'MAVEN_HOME' // Ensure this matches the Maven installation name in Jenkins
+        allure 'ALLURE_REPORT'
+    }
+    environment {
+        ALLURE_RESULTS_DIR = "allure-results-${env.BUILD_NUMBER}"
     }
     stages {
-        stage('Init Selenium Grid') {
+        stage('Prepare Workspace') {
             steps {
                 powershell '''
-                  docker-compose up -d
+                    # Create a new directory for this build's Allure results
+                    New-Item -Path $env:ALLURE_RESULTS_DIR -ItemType Directory -Force
+
+                    # Optionally, clean up old result directories here if needed
+                    # Get-ChildItem -Path "allure-results-*" | Where-Object { $_.Name -ne $env:ALLURE_RESULTS_DIR } | Remove-Item -Recurse -Force
                 '''
             }
         }
-        stage('Selenium Grid Up') {
+        stage('Start Selenium Grid') {
             steps {
                 powershell '''
-                  python check_container_status.py
+                    # Start Docker Desktop
+                    python start_docker_desktop.py
+                '''                
+                powershell '''
+                    # Start Selenium Grid using Docker Compose
+                    docker-compose up -d
+                '''
+                powershell '''
+                    # Check container status
+                    python check_container_status.py
                 '''
             }
         }
         stage('Run Tests') {
             steps {
                 script {
-                    def mvnResult = powershell('''
-                        mvn clean test
-                    ''')
+                    def storyId = params.StoryId
+                    def xmlSuite = params.XmlSuite
+                    def ALLURE_RESULTS_DIR = params.ALLURE_RESULTS_DIR
+                    powershell """
+                        Write-Host "StoryId: ${params.StoryId}"
+                        Write-Host "XmlSuite: ${params.XmlSuite}"
+                        mvn clean test "-DsuiteXmlFile=${params.XmlSuite}.xml" "-Dgroups=${params.StoryId}" "-Dallure.results.directory=${env.ALLURE_RESULTS_DIR}"
+                    """
                 }
             }
-            post {
-                always {
-                    powershell '''
-                        docker-compose down
-                    '''
-                    allure([
-                        includeProperties: false,
-                        jdk: '',
-                        properties: [],
-                        reportBuildPolicy: 'ALWAYS',
-                        results: [[path: 'target/allure-results']]
-                    ])
-                }
+        }
+        // stage('Generate Allure Report') {
+        //     steps {
+        //         script {
+        //             powershell "allure generate ${env.ALLURE_RESULTS_DIR} -o allure-report-${env.BUILD_NUMBER} --clean"
+        //         }
+        //     }
+        // }
+    }
+    post {
+        always {
+            script {
+                powershell '''
+                    # Stop Docker containers and clean up
+                    docker-compose down
+                '''
+                powershell '''
+                    # Stop Docker Desktop
+                    python stop_docker_desktop.py
+                '''                
+                // Publish Allure report
+                allure([
+                    includeProperties: false,
+                    jdk: '',
+                    properties: [],
+                    reportBuildPolicy: 'ALWAYS',
+                    results: [[path: "${env.ALLURE_RESULTS_DIR}"]]
+                ])
             }
         }
     }
