@@ -1,8 +1,6 @@
 package org.foden.pages;
 
-import io.qameta.allure.Allure;
 import io.qameta.allure.Step;
-import lombok.extern.java.Log;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.support.FindBy;
 
@@ -25,6 +23,12 @@ public class LoginPage extends BasePage{
 
     @FindBy(xpath = "//input[@value='Login']")
     private WebElement loginButton;
+
+    @FindBy(xpath = "//a[@class='list-group-item'][normalize-space()='Logout']")
+    private WebElement logoutButtonAtBottomRight;
+
+    @FindBy(xpath = "//div[@class='alert alert-danger alert-dismissible' and text()='Warning: No match for E-Mail Address and/or Password.']")
+    private WebElement errorLoginMsg;
 
     public static ThreadLocal<LoginPage> loginPage = new ThreadLocal<>();
 
@@ -60,6 +64,16 @@ public class LoginPage extends BasePage{
     public void login(String username, String password) {
         sendTextToElement(emailInput, username);
         sendTextToElement(passwordInput, password);
-        clickToElement(loginButton);
+        click(loginButton, true);
+    }
+
+    @Step("Verify login successfully")
+    public boolean verifyLoginSuccessfully(String partialUrl) {
+        return isUrlContains(partialUrl) && checkForElementVisibility(logoutButtonAtBottomRight);
+    }
+
+    @Step("Verify login failed with message {0}")
+    public boolean verifyLoginFailed() {
+        return checkForElementVisibility(errorLoginMsg);
     }
 }
