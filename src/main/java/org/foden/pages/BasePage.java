@@ -1287,6 +1287,10 @@ public class BasePage {
         return driver.getCurrentUrl();
     }
 
+    public boolean isUrlContains(String partialURL){
+        return getPageUrl().contains(partialURL);
+    }
+
     public void jsClick(By byLocator) {
         WebElement element = findElement(byLocator);
         ((JavascriptExecutor) driver).executeScript("arguments[0].click();", element);
@@ -2057,11 +2061,6 @@ public class BasePage {
         System.out.printf("    Timer '%s': %.1f seconds in %s() function %n", timerName, elapsedSeconds,
                 callingFunction);
         System.out.printf("    Cumulative time for '%s': %.1f seconds %n", timerName, cumulativeTimes.get(timerName));
-    }
-
-    public void softAssertAll() {
-
-        softAssert.assertAll();
     }
 
     public String getText(String locator) {
