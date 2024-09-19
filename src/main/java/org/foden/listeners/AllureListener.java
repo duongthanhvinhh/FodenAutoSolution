@@ -60,7 +60,7 @@ public class AllureListener implements ITestListener{
         if (driver != null){
             System.out.println("Screenshot captured for test case: " + getTestMethodName(iTestResult));
             saveScreenshotPNG(driver);
-        }
+        } else Log4jUtils.warn("Driver is null, can not take screenshot");
         saveTextLog(getTestMethodName(iTestResult) + " failed and screenshot taken.");
     }
 

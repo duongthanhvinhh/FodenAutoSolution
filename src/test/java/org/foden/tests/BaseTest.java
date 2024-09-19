@@ -40,7 +40,7 @@ public class BaseTest {
         System.out.println("Allure folder cleaned");
     }
 
-    @BeforeMethod(alwaysRun = true)
+    @BeforeMethod
     public synchronized void beforeMethod(Method method){
         softAssert = new SoftAssert();
         startTime = System.currentTimeMillis();
@@ -51,17 +51,17 @@ public class BaseTest {
         }
     }
 
-    @BeforeMethod(alwaysRun = true)
+    @BeforeMethod
     protected synchronized void setUp(){
         Driver.initDriver();
     }
 
-    @AfterMethod(alwaysRun = true)
+    @AfterMethod
     protected synchronized void tearDown(){
         Driver.quitDriver();
     }
 
-    @AfterMethod(alwaysRun = true)
+    @AfterMethod
     public void afterMethod(ITestResult iTestResult, Method method){
         Story storyAnnotation = method.getAnnotation(Story.class);
         if (storyAnnotation != null){
