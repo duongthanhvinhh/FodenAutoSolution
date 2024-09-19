@@ -39,3 +39,5 @@ build/
 target
 allure-results
 allure-results-prior-run
+
+src/test/resources/config/config.properties
