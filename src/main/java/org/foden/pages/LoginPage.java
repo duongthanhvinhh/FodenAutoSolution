@@ -92,7 +92,7 @@ public class LoginPage extends BasePage{
 
     @Step("Verify login successfully")
     public boolean verifyLoginSuccessfully(String partialUrl) {
-        return isUrlContains(partialUrl) && checkForElementVisibility(logoutButtonAtBottomRight);
+        return checkForElementVisibility(logoutButtonAtBottomRight) && isUrlContains(partialUrl);
     }
 
     @Step("Verify login failed with message {0}")
