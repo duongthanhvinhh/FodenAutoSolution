@@ -4,9 +4,9 @@
     <listeners>
         <listener class-name="org.foden.listeners.AllureListener"/>
     </listeners>
-    <test verbose="2" preserve-order="true" name="Test" thread-count="3" parallel="methods">
+    <test verbose="2" preserve-order="true" name="Test" thread-count="4" parallel="methods">
         <classes>
-            <class name="org.foden.tests.LoginTest"/>
+            <class name="org.foden.tests.LoginSteps"/>
         </classes>
     </test>
 </suite>

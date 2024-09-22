@@ -1,9 +1,13 @@
-package org.foden.tests;
+package org.foden.driver;
 
+import io.qameta.allure.Allure;
+import io.qameta.allure.Step;
 import io.qameta.allure.Story;
-import org.foden.driver.Driver;
+import org.foden.enums.ConfigProperties;
 import org.foden.utils.DateTimeUtils;
 import org.foden.utils.FileDirectoryUtils;
+import org.foden.utils.PropertyUtils;
+import org.openqa.selenium.WebDriver;
 import org.testng.ITestResult;
 import org.testng.annotations.AfterMethod;
 import org.testng.annotations.BeforeClass;
@@ -11,14 +15,44 @@ import org.testng.annotations.BeforeMethod;
 import org.testng.asserts.SoftAssert;
 
 import java.lang.reflect.Method;
+import java.util.concurrent.Executors;
+import java.util.concurrent.ScheduledExecutorService;
+import java.util.concurrent.TimeUnit;
 
-public class BaseTest {
+public class BaseSteps extends WebDriverProvider {
 
-    protected BaseTest(){}
-
+    protected BaseSteps(){}
+    protected ScheduledExecutorService browserWaker;
     protected SoftAssert softAssert = new SoftAssert();
     long startTime;
     private String story;
+    String osName = System.getProperty("os.name");
+
+    public static boolean hasQuit() {
+        try {
+            getDriver().getTitle();
+            return false;
+        } catch (Exception e) {
+            return true;
+        }
+    }
+
+    @Step("Initializing WebDriver")
+    public void initializeWebDriver() {
+        int count=0;
+        driver = DriverFactory.webDriverHashmap.get(Thread.currentThread().getId()).get();
+        System.out.println("Thread "+Thread.currentThread().getId()+": Driver while intitalizing "+ driver);
+        while (hasQuit() == true && count < 3) {
+            DriverFactory.getInstance().threadDriver.remove();
+            driver = DriverFactory.getInstance().getDriver();
+            System.out.println("Retrying driver for " + count + " time(s) and driver value is " + driver);
+            count++;
+        }
+            System.out.println("Driver===============================>>> " + driver);
+            initialize(PropertyUtils.get(ConfigProperties.URL), osName);
+    }
+
+
     @BeforeClass
     public void cleanFolder() {
         String allureDirPath;
@@ -40,28 +74,53 @@ public class BaseTest {
         System.out.println("Allure folder cleaned");
     }
 
-    @BeforeMethod
-    public synchronized void beforeMethod(Method method){
+    @BeforeMethod(alwaysRun = true)
+    public synchronized void setUp(Method method){
         softAssert = new SoftAssert();
         startTime = System.currentTimeMillis();
+
+        driver = DriverFactory.getInstance().getDriver();
+
         Story storyAnnotation = method.getAnnotation(Story.class);
         if (storyAnnotation != null){
             story = storyAnnotation.value();
             System.out.println("Starting Story: " + story + " with thread - " + Thread.currentThread().getId());
         }
+        runBrowserWaker(Thread.currentThread().getId(), this.driver);
     }
 
-    @BeforeMethod
-    protected synchronized void setUp(){
-        Driver.initDriver();
+    public void runBrowserWaker(long threadId, WebDriver driverToWake){
+        System.out.println("BrowserWaker: Thread " + threadId + " setting up browser waker with driver " + driverToWake);
+        browserWaker = Executors.newSingleThreadScheduledExecutor();
+        browserWaker.scheduleAtFixedRate(() -> {
+            System.out.println("BrowserWaker: Thread " + threadId + " Browser " + driverToWake + " is being awaken");
+            try {
+                if (driverToWake != null) {
+                    //wake session
+                    driverToWake.getTitle();
+                    System.out.println("BrowserWaker: Thread " + threadId + " Browser " + driverToWake + " is awaken");
+                } else {
+                    System.out.println("BrowserWaker: Thread " + threadId + " Browser in thread is NULL");
+                }
+            }
+			catch (Throwable t) {
+                    System.out.println("BrowserWaker: Thread "+  threadId + " failed waking with driver "+ driverToWake +": " + t.getMessage());
+            }
+        }, 180, 180, TimeUnit.SECONDS);
     }
 
     @AfterMethod
-    protected synchronized void tearDown(){
-        Driver.quitDriver();
+    public void tearDown(){
+        try {
+            System.out.println("Closing browser in tearDown After Method");
+            DriverFactory.getInstance().removeDriver();
+        } catch (Exception e){
+            System.out.println("exit");
+            Allure.addAttachment("Close Browser in tearDown FAILED (Potentially crashed)", e.getMessage());
+        }
     }
 
-    @AfterMethod
+    @AfterMethod(alwaysRun = true)
     public void afterMethod(ITestResult iTestResult, Method method){
         Story storyAnnotation = method.getAnnotation(Story.class);
         if (storyAnnotation != null){
