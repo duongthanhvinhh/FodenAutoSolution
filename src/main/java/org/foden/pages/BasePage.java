@@ -207,16 +207,16 @@ public class BasePage {
     }
 
     // Default for click is to perform the page sync
-    final boolean DO_NOT_SKIP_PAGE_SYNC = false;
+    final boolean SKIP_PAGE_SYNC = true;
 
 
     public void click(WebElement element){
-        click(element, DO_NOT_SKIP_PAGE_SYNC);
+        click(element, SKIP_PAGE_SYNC);
     }
 
     public void click(String locator) {
         WebElement element = getElement(getByLocator(locator));
-        click(element, DO_NOT_SKIP_PAGE_SYNC);
+        click(element, SKIP_PAGE_SYNC);
     }
 
     public void click(String locator, boolean skipPageSync) {

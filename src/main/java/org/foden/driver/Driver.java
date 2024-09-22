@@ -14,7 +14,7 @@ public final class Driver {
     public static void initDriver(){
         if (Objects.isNull(DriverManager.getDriver())){
             try {
-                DriverManager.setDriver(DriverFactory.getDriver(PropertyUtils.get(ConfigProperties.BROWSER)));
+                DriverManager.setDriver(DriverFactory.getDriver());
             } catch (MalformedURLException e) {
                 throw new BrowserInvocationFailedException("Browser invocation failed. Please check the capabilities of browser!");
             }
