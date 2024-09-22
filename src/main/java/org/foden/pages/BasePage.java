@@ -7,7 +7,7 @@ import org.apache.commons.io.FileUtils;
 import org.apache.commons.io.comparator.LastModifiedFileComparator;
 import org.apache.commons.io.filefilter.WildcardFileFilter;
 import org.foden.constants.FrameworkConstants;
-import org.foden.driver.DriverManager;
+import org.foden.driver.DriverFactory;
 import org.foden.utils.*;
 import org.openqa.selenium.*;
 import org.openqa.selenium.NoSuchElementException;
@@ -42,8 +42,7 @@ import static org.testng.Assert.assertTrue;
 
 public class BasePage {
 
-    final static Logger logger = LoggerFactory.getLogger(BasePage.class);
-    public static WebDriver driver;
+    public WebDriver driver;
     private Map<String, Long> startTimes;
     private Map<String, Double> cumulativeTimes;
     public BasePage(){
@@ -52,7 +51,8 @@ public class BasePage {
     }
     
     public void init(){
-        this.driver = DriverManager.getDriver();
+        this.driver = DriverFactory.webDriverHashmap.get(Thread.currentThread().getId()).get();
+        Log4jUtils.info("Thread " + Thread.currentThread().getId() + ": Driver in init method is " + this.driver);
         PageFactory.initElements(driver,this);
     }
 
@@ -468,7 +468,7 @@ public class BasePage {
     }
 
     protected void logErrorForNotFindingElement(By byLocator) {
-        logger.error("Could not find element based on locator: " + byLocator.toString());
+        Log4jUtils.error("Could not find element based on locator: " + byLocator.toString());
     }
 
     protected void logErrorForNotFindingElement(WebElement element) {
@@ -477,7 +477,7 @@ public class BasePage {
     }
 
     protected void logErrorForNotFindingElement() {
-        logger.error("Element is null and can not be acted upon");
+        Log4jUtils.error("Element is null and can not be acted upon");
     }
 
     protected void throwNullPointerExeptionForNullDriver() {
@@ -942,7 +942,7 @@ public class BasePage {
             @Override
             public Boolean apply(WebDriver driver) {
                 try {
-                    logger.info("Page is still loading");
+                    Log4jUtils.info("Page is still loading");
                     return ((Long) ((JavascriptExecutor) driver).executeScript("return jQuery.active") == 0);
                 } catch (Exception e) {
                     // no jQuery present
@@ -955,7 +955,7 @@ public class BasePage {
         ExpectedCondition<Boolean> jsLoad = new ExpectedCondition<Boolean>() {
             @Override
             public Boolean apply(WebDriver driver) {
-                logger.info("Page is still loading");
+                Log4jUtils.info("Page is still loading");
                 return ((JavascriptExecutor) driver).executeScript("return document.readyState").toString()
                         .equals("complete");
             }
@@ -1451,7 +1451,7 @@ public class BasePage {
         try {
             driver.switchTo().defaultContent();
         } catch (Exception e) {
-            logger.info("Could not switch to default content");
+            Log4jUtils.info("Could not switch to default content");
             e.printStackTrace();
         }
 
@@ -1462,7 +1462,7 @@ public class BasePage {
             WebElement iframe = driver.findElement(By.xpath("//div[@class='content']//iframe"));
             driver.switchTo().frame(iframe);
         } catch (Exception e) {
-            logger.info("Could not switch to iframe");
+            Log4jUtils.info("Could not switch to iframe");
             e.printStackTrace();
         }
     }

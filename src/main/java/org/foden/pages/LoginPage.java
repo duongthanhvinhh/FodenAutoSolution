@@ -1,10 +1,15 @@
 package org.foden.pages;
 
 import io.qameta.allure.Step;
+import org.foden.driver.DriverFactory;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.support.FindBy;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 public class LoginPage extends BasePage{
+
+    final Logger logger = LoggerFactory.getLogger(this.getClass().getName());
 
     @FindBy(xpath = "//span[text()='My Account']")
     private WebElement myAccountDropdown;
@@ -61,12 +66,12 @@ public class LoginPage extends BasePage{
 
     public static LoginPage getInstance(){
         try {
-            if (loginPage.get() == null){
+            if (loginPage.get() == null || loginPage.get().driver != DriverFactory.webDriverHashmap.get(Thread.currentThread().getId()).get()){
                 loginPage.set(new LoginPage());
             }
             return loginPage.get();
         } catch (Exception e){
-            System.out.println(e.getMessage());
+            e.printStackTrace();
         }
         return loginPage.get();
     }

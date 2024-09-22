@@ -1,8 +1,7 @@
 package org.foden.listeners;
 
 import io.qameta.allure.Attachment;
-import org.checkerframework.checker.units.qual.A;
-import org.foden.driver.DriverManager;
+import org.foden.driver.WebDriverProvider;
 import org.foden.utils.Log4jUtils;
 import org.openqa.selenium.OutputType;
 import org.openqa.selenium.TakesScreenshot;
@@ -56,7 +55,7 @@ public class AllureListener implements ITestListener{
     @Override
     public void onTestFailure(ITestResult iTestResult){
         Log4jUtils.info(getTestMethodName(iTestResult) + " test is failed.");
-        WebDriver driver = DriverManager.getDriver();
+        WebDriver driver = WebDriverProvider.getDriver();
         if (driver != null){
             System.out.println("Screenshot captured for test case: " + getTestMethodName(iTestResult));
             saveScreenshotPNG(driver);

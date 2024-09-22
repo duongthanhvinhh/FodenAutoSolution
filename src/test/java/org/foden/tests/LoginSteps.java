@@ -1,6 +1,7 @@
 package org.foden.tests;
 
 import io.qameta.allure.*;
+import org.foden.driver.BaseSteps;
 import org.foden.enums.TestGroups;
 import org.foden.pages.LoginPage;
 import org.testng.Assert;
@@ -9,9 +10,9 @@ import org.testng.annotations.Test;
 import org.testng.asserts.SoftAssert;
 
 @Listeners({org.foden.listeners.AllureListener.class})
-public class LoginTest extends BaseTest{
+public class LoginSteps extends BaseSteps {
 
-    private LoginTest(){}
+    public LoginSteps(){}
 
     @Epic("FAS-7: Feature: Authentication - Authorization")
     @Feature("FAS-11: Develope scripts for scenarios Login, Logout")
@@ -21,6 +22,7 @@ public class LoginTest extends BaseTest{
     @Description("Verify logging into the Application using valid credentials")
     @Owner("Foden Duong")
     public void loginSuccessfullyWithValidCredentials(){
+        initializeWebDriver();
         LoginPage loginPage = LoginPage.getInstance();
         loginPage.goToLoginPage();
         loginPage.login("fodend1706@gmail.com", "Password@01");
@@ -36,6 +38,7 @@ public class LoginTest extends BaseTest{
     @Owner("Foden Duong")
     public void loginFailedWithInvalidCredentials(){
         SoftAssert softAssert = new SoftAssert();
+        initializeWebDriver();
         LoginPage loginPage = LoginPage.getInstance();
         loginPage.goToLoginPage();
         loginPage.login("fodend1706@gmail.com", "WrongPassword");
@@ -57,6 +60,7 @@ public class LoginTest extends BaseTest{
     @Description("Verify 'Forgotten Password' link is available in the Login page and is working")
     @Owner("Foden Duong")
     public void verifyForgottenPasswordFunction(){
+        initializeWebDriver();
         LoginPage loginPage = LoginPage.getInstance();
         loginPage.goToLoginPage();
         loginPage.goToForgottenPasswordPage();
@@ -72,6 +76,7 @@ public class LoginTest extends BaseTest{
     @Description("Verify E-Mail Address and Password text fields in the Login page have the place holder text ")
     @Owner("Foden Duong")
     public void verifyUiOfLoginPage(){
+        initializeWebDriver();
         LoginPage loginPage = LoginPage.getInstance();
         loginPage.goToLoginPage();
         Assert.assertTrue(loginPage.verifyPlaceholderOfEmailAndPasswordFields());
@@ -86,6 +91,7 @@ public class LoginTest extends BaseTest{
     @Owner("Foden Duong")
     public void verifyAllWaysToNagigateToLoginPage(){
         SoftAssert softAssert = new SoftAssert();
+        initializeWebDriver();
         LoginPage loginPage = LoginPage.getInstance();
         softAssert.assertTrue(loginPage.verifyCanNavigateToLoginPageByClickingLoginLinkUnderRegisterPage(),"Can not go to login page by clicking login link under register page.");
         softAssert.assertTrue(loginPage.verifyCanNavigateToLoginPageByClickingLoginLinkInSidebar(),"Cannot go to login page by clicking login link in sidebar on the right");
