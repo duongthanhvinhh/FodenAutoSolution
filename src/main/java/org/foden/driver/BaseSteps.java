@@ -3,9 +3,12 @@ package org.foden.driver;
 import io.qameta.allure.Allure;
 import io.qameta.allure.Step;
 import io.qameta.allure.Story;
+import org.apache.commons.io.FileUtils;
 import org.foden.enums.ConfigProperties;
+import org.foden.listeners.AllureListener;
 import org.foden.utils.DateTimeUtils;
 import org.foden.utils.FileDirectoryUtils;
+import org.foden.utils.Log4jUtils;
 import org.foden.utils.PropertyUtils;
 import org.openqa.selenium.WebDriver;
 import org.testng.ITestResult;
@@ -14,6 +17,8 @@ import org.testng.annotations.BeforeClass;
 import org.testng.annotations.BeforeMethod;
 import org.testng.asserts.SoftAssert;
 
+import java.io.File;
+import java.io.IOException;
 import java.lang.reflect.Method;
 import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledExecutorService;
@@ -110,7 +115,12 @@ public class BaseSteps extends WebDriverProvider {
     }
 
     @AfterMethod
-    public void tearDown(){
+    public void tearDown(ITestResult iTestResult) throws IOException {
+        Log4jUtils.info("Updating result of script " + iTestResult.getName() + " to report :: updateTestStatus");
+        if (iTestResult.getStatus()==ITestResult.FAILURE){
+            File screenshot = AllureListener.takeScreenshot(WebDriverProvider.getDriver(), iTestResult.getName());
+            Allure.addAttachment("Page Screenshot", FileUtils.openInputStream(screenshot));
+        }
         try {
             System.out.println("Closing browser in tearDown After Method");
             DriverFactory.getInstance().removeDriver();

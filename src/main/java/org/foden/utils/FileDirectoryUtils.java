@@ -23,11 +23,11 @@ public class FileDirectoryUtils {
                             try {
                                 Files.delete(file);
                             } catch (IOException e) {
-                                e.printStackTrace();
+                                Log4jUtils.error(e.getMessage());
                             }
                         });
             } catch (IOException e) {
-                e.printStackTrace();
+                Log4jUtils.error(e.getMessage());
             }
         }
     }
@@ -43,11 +43,11 @@ public class FileDirectoryUtils {
                         try {
                             Files.copy(source, destination, StandardCopyOption.REPLACE_EXISTING);
                         } catch (IOException e) {
-                            e.printStackTrace();
+                            Log4jUtils.error(e.getMessage());
                         }
                     });
         } catch (IOException e) {
-            e.printStackTrace();
+            Log4jUtils.error(e.getMessage());
         }
     }
 
