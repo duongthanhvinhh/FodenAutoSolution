@@ -1451,8 +1451,8 @@ public class BasePage {
         try {
             driver.switchTo().defaultContent();
         } catch (Exception e) {
-            Log4jUtils.info("Could not switch to default content");
-            e.printStackTrace();
+            Log4jUtils.error("Could not switch to default content");
+            Log4jUtils.error(e.getMessage());
         }
 
     }
@@ -1462,8 +1462,8 @@ public class BasePage {
             WebElement iframe = driver.findElement(By.xpath("//div[@class='content']//iframe"));
             driver.switchTo().frame(iframe);
         } catch (Exception e) {
-            Log4jUtils.info("Could not switch to iframe");
-            e.printStackTrace();
+            Log4jUtils.error("Could not switch to iframe");
+            Log4jUtils.error(e.getMessage());
         }
     }
 
@@ -1525,7 +1525,7 @@ public class BasePage {
         try {
             FileUtils.copyFile(source, destination);
         } catch (IOException e) {
-            e.printStackTrace();
+            Log4jUtils.error(e.getMessage());
         }
         return dest;
     }
@@ -1654,7 +1654,7 @@ public class BasePage {
             CSVReader csvReader = new CSVReaderBuilder(filereader).build();
             data = csvReader.readAll();
         } catch (Exception e) {
-            e.printStackTrace();
+            Log4jUtils.error(e.getMessage());
         }
         return data;
     }
@@ -2156,7 +2156,7 @@ public class BasePage {
             try {
                 date = LocalDate.parse(value, dtf);
             } catch (Exception e) {
-                e.printStackTrace();
+                Log4jUtils.error(e.getMessage());
             }
         }
         return date;
@@ -2202,7 +2202,7 @@ public class BasePage {
 
             reader.close();
         } catch (IOException e) {
-            e.printStackTrace();
+            Log4jUtils.error(e.getMessage());
         }
     }
 
@@ -2330,7 +2330,7 @@ public class BasePage {
             System.out.println("All elements with locator " + locator + " have disappeared");
 
         } catch (Exception e) {
-            e.printStackTrace();
+            Log4jUtils.error(e.getMessage());
         }
         driver.manage().timeouts().implicitlyWait(Duration.ofSeconds((FrameworkConstants.getImplicitwaitTimeout())));
     }
@@ -2440,7 +2440,7 @@ public class BasePage {
                 }
             }
         }catch (Exception e){
-            e.printStackTrace();
+            Log4jUtils.error(e.getMessage());
         }
         return "";
     }

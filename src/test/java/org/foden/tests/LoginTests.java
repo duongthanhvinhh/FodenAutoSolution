@@ -10,9 +10,9 @@ import org.testng.annotations.Test;
 import org.testng.asserts.SoftAssert;
 
 @Listeners({org.foden.listeners.AllureListener.class})
-public class LoginSteps extends BaseSteps {
+public class LoginTests extends BaseSteps {
 
-    public LoginSteps(){}
+    public LoginTests(){}
 
     @Epic("FAS-7: Feature: Authentication - Authorization")
     @Feature("FAS-11: Develope scripts for scenarios Login, Logout")
@@ -42,13 +42,13 @@ public class LoginSteps extends BaseSteps {
         LoginPage loginPage = LoginPage.getInstance();
         loginPage.goToLoginPage();
         loginPage.login("fodend1706@gmail.com", "WrongPassword");
-        softAssert.assertTrue(LoginPage.getInstance().verifyLoginFailed(),"Expected login but there's no message indicate that the login attempt was failed.");
+        softAssert.assertTrue(LoginPage.getInstance().verifyLoginFailed("Warning: No match for E-Mail Address and/or Password."),"Expected login but there's no message indicate that the login attempt was failed.");
         loginPage.login("test@gmail.com","Password@01");
-        softAssert.assertTrue(LoginPage.getInstance().verifyLoginFailed(),"Expected login but there's no message indicate that the login attempt was failed.");
+        softAssert.assertTrue(LoginPage.getInstance().verifyLoginFailed("Warning: No match for E-Mail Address and/or Password."),"Expected login but there's no message indicate that the login attempt was failed.");
         loginPage.login("foden1706@gmail.com", "");
-        softAssert.assertTrue(LoginPage.getInstance().verifyLoginFailed(),"Expected login but there's no message indicate that the login attempt was failed.");
+        softAssert.assertTrue(LoginPage.getInstance().verifyLoginFailed("Warning: No match for E-Mail Address and/or Password."),"Expected login but there's no message indicate that the login attempt was failed.");
         loginPage.login("","Password@01");
-        softAssert.assertTrue(LoginPage.getInstance().verifyLoginFailed(),"Expected login but there's no message indicate that the login attempt was failed.");
+        softAssert.assertTrue(LoginPage.getInstance().verifyLoginFailed("Warning: No match for E-Mail Address and/or Password."),"Expected login but there's no message indicate that the login attempt was failed.");
         softAssert.assertAll();
     }
 

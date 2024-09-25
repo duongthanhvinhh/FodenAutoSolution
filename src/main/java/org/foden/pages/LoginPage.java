@@ -2,6 +2,7 @@ package org.foden.pages;
 
 import io.qameta.allure.Step;
 import org.foden.driver.DriverFactory;
+import org.foden.utils.Log4jUtils;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.support.FindBy;
 import org.slf4j.Logger;
@@ -47,7 +48,7 @@ public class LoginPage extends BasePage{
     @FindBy(xpath = "//div[@class='alert alert-danger alert-dismissible' and text()='Warning: No match for E-Mail Address and/or Password.']")
     private WebElement errorLoginMsg;
     
-    @FindBy(xpath = "//div[@class='form-group']//a[normalize-space()='Forgotten Password']")
+    @FindBy(xpath = "//div[@class='form-group']//a[normalize-space()='1Forgotten Password']")
     private WebElement forgottenPasswordLink;
 
     @FindBy(xpath = "//h1[normalize-space()='Forgot Your Password?']")
@@ -58,6 +59,9 @@ public class LoginPage extends BasePage{
 
     @FindBy(xpath = "//div[text()='An email with a confirmation link has been sent your email address.']")
     private WebElement confirmEmailAlertSuccess;
+
+    @FindBy(xpath = "//div[text()='Warning: Your account has exceeded allowed number of login attempts. Please try again in 1 hour.']")
+    private WebElement exceedLoginAttemptsAlert;
     public static ThreadLocal<LoginPage> loginPage = new ThreadLocal<>();
 
     public LoginPage(){
@@ -71,7 +75,7 @@ public class LoginPage extends BasePage{
             }
             return loginPage.get();
         } catch (Exception e){
-            e.printStackTrace();
+            Log4jUtils.error(e.getMessage());
         }
         return loginPage.get();
     }
@@ -101,7 +105,7 @@ public class LoginPage extends BasePage{
     }
 
     @Step("Verify login failed with message {0}")
-    public boolean verifyLoginFailed() {
+    public boolean verifyLoginFailed(String message) {
         return checkForElementVisibility(errorLoginMsg);
     }
 
