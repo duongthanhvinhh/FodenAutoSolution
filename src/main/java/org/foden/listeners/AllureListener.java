@@ -1,5 +1,6 @@
 package org.foden.listeners;
 
+import io.qameta.allure.Allure;
 import io.qameta.allure.Attachment;
 import org.apache.commons.io.FileUtils;
 import org.foden.driver.WebDriverProvider;
@@ -38,7 +39,7 @@ public class AllureListener implements ITestListener, ISuiteListener {
         TakesScreenshot takesScreenshot = (TakesScreenshot) driver;
         File src = takesScreenshot.getScreenshotAs(OutputType.FILE);
         try {
-            screenShotPath = System.getProperty("user.dir") + "\\screenshots" + testName + "_screenshot.png";
+            screenShotPath = System.getProperty("user.dir") + "\\target" + "\\allure-results" + testName + "_screenshot.png";
             Log4jUtils.info("The screenshot is saved at " + screenShotPath);
             FileUtils.copyFile(src, new File(screenShotPath));
         } catch (IOException e) {
