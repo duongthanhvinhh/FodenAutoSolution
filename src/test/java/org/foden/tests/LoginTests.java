@@ -75,7 +75,7 @@ public class LoginTests extends BaseSteps {
     @Severity(SeverityLevel.NORMAL)
     @Description("Verify E-Mail Address and Password text fields in the Login page have the place holder text ")
     @Owner("Foden Duong")
-    public void verifyUiOfLoginPage(){
+    public void verifyPlaceHolderOfUserAndPasswordFields(){
         initializeWebDriver();
         LoginPage loginPage = LoginPage.getInstance();
         loginPage.goToLoginPage();
@@ -95,6 +95,45 @@ public class LoginTests extends BaseSteps {
         LoginPage loginPage = LoginPage.getInstance();
         softAssert.assertTrue(loginPage.verifyCanNavigateToLoginPageByClickingLoginLinkUnderRegisterPage(),"Can not go to login page by clicking login link under register page.");
         softAssert.assertTrue(loginPage.verifyCanNavigateToLoginPageByClickingLoginLinkInSidebar(),"Cannot go to login page by clicking login link in sidebar on the right");
+        softAssert.assertAll();
+    }
+
+    @Epic("FAS-7: Feature: Authentication - Authorization")
+    @Feature("FAS-11: Develope scripts for scenarios Login, Logout")
+    @Test(priority = 0,description = "Verify the number of unsucessful login attemps", groups = {"FAS-59", "FAS-11", TestGroups.Id.SMOKE, TestGroups.Id.REGRESSION})
+    @Story("FAS-59")
+    @Severity(SeverityLevel.NORMAL)
+    @Description("Verify the number of unsucessful login attemps")
+    @Owner("Foden Duong")
+    public void verifyTheNumberOfUnsuccessfulLoginAttempts(){
+        initializeWebDriver();
+        LoginPage loginPage = LoginPage.getInstance();
+        loginPage.goToLoginPage();
+        loginPage.login("foden1707@gmail.com","wrongpwd");
+        loginPage.login("foden1707@gmail.com","wrongpwd");
+        loginPage.login("foden1707@gmail.com","wrongpwd");
+        loginPage.login("foden1707@gmail.com","wrongpwd");
+        loginPage.login("foden1707@gmail.com","wrongpwd");
+        loginPage.login("foden1707@gmail.com","wrongpwd");
+        Assert.assertTrue(loginPage.unsuccessfulLoginAtemptsDisplayedAfterFiveAttempts(),"Login attempts exceed was not displayed after 5 attempts with wrong password.");
+    }
+
+    @Epic("FAS-7: Feature: Authentication - Authorization")
+    @Feature("FAS-11: Develope scripts for scenarios Login, Logout")
+    @Test(priority = 0,description = "Verify the Breakcrumb, Page Heading, Page Title and Page URL of Login page", groups = {"FAS-53", "FAS-11", TestGroups.Id.SMOKE, TestGroups.Id.REGRESSION})
+    @Story("FAS-53")
+    @Severity(SeverityLevel.NORMAL)
+    @Description("Verify the Breakcrumb, Page Heading, Page Title and Page URL of Login page")
+    @Owner("Foden Duong")
+    public void verifyUiOfLoginPage(){
+        SoftAssert softAssert = new SoftAssert();
+        initializeWebDriver();
+        LoginPage loginPage = LoginPage.getInstance();
+        loginPage.goToLoginPage();
+        softAssert.assertEquals(loginPage.getLoginPageTitle(),"Account Login","Page title not matched.");
+        softAssert.assertTrue(loginPage.getLoginPageUrl().contains("route=account/login"),"Page Url not matched.");
+        softAssert.assertTrue(loginPage.pageHeadingIsDisplayedCorrectly(),"Page Header not displayed.");
+        softAssert.assertTrue(loginPage.verifyBreadCrumb(),"Breadcrumb is not displayed correctly.");
         softAssert.assertAll();
     }
 }
