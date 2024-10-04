@@ -48,7 +48,7 @@ public class LoginPage extends BasePage{
     @FindBy(xpath = "//div[@class='alert alert-danger alert-dismissible' and text()='Warning: No match for E-Mail Address and/or Password.']")
     private WebElement errorLoginMsg;
     
-    @FindBy(xpath = "//div[@class='form-group']//a[normalize-space()='1Forgotten Password']")
+    @FindBy(xpath = "//div[@class='form-group']//a[normalize-space()='Forgotten Password']")
     private WebElement forgottenPasswordLink;
 
     @FindBy(xpath = "//h1[normalize-space()='Forgot Your Password?']")
@@ -62,6 +62,18 @@ public class LoginPage extends BasePage{
 
     @FindBy(xpath = "//div[text()='Warning: Your account has exceeded allowed number of login attempts. Please try again in 1 hour.']")
     private WebElement exceedLoginAttemptsAlert;
+
+    @FindBy(xpath = "//h2[text()='Returning Customer']")
+    private WebElement headingLoginPage;
+
+    @FindBy(xpath = "//ul[@class='breadcrumb']//child::i[@class='fa fa-home']")
+    private WebElement homeIconBreadCrumb;
+
+    @FindBy(xpath = "//ul[@class='breadcrumb']//child::a[text()='Account']")
+    private WebElement accountInBreadCrumb;
+
+    @FindBy(xpath = "//ul[@class='breadcrumb']//child::a[text()='Login']")
+    private WebElement loginInBreadCrumb;
     public static ThreadLocal<LoginPage> loginPage = new ThreadLocal<>();
 
     public LoginPage(){
@@ -145,5 +157,28 @@ public class LoginPage extends BasePage{
         return checkForElementVisibility(loginButton);
     }
 
+    @Step("Verify can go to login page by click login link in Sidebar on the right")
+    public boolean unsuccessfulLoginAtemptsDisplayedAfterFiveAttempts() {
+        return checkForElementVisibility(exceedLoginAttemptsAlert);
+    }
 
+    @Step("Get Login Page Url")
+    public String getLoginPageUrl(){
+        return getPageUrl();
+    }
+
+    @Step("Verify Login Page header is displayed")
+    public boolean pageHeadingIsDisplayedCorrectly(){
+        return checkForElementVisibility(headingLoginPage);
+    }
+
+    @Step("Get Login Page Title")
+    public String getLoginPageTitle(){
+        return getPageTitle();
+    }
+
+    @Step("Verify Login Page breadcrumb is displayed")
+    public boolean verifyBreadCrumb(){
+        return checkForElementVisibility(homeIconBreadCrumb) && checkForElementVisibility(accountInBreadCrumb) && checkForElementVisibility(loginInBreadCrumb);
+    }
 }
