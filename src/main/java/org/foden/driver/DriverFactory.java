@@ -40,7 +40,7 @@ public final class DriverFactory {
             switch (PropertyUtils.get(ConfigProperties.BROWSER).toLowerCase()){
                     case "edge":
                     case "chrome":
-                        if ((osName != null && osName.equalsIgnoreCase("linux")) || Objects.equals(PropertyUtils.get(ConfigProperties.USESELENIUMGRID), "yes")){
+                        if (Objects.equals(PropertyUtils.get(ConfigProperties.USESELENIUMGRID), "yes") && (osName != null && osName.equalsIgnoreCase("linux"))){
                             try{
                                 String chromeDriverURL = PropertyUtils.get(ConfigProperties.GRIDURL);
                                 URL chromeUrl = new URL(chromeDriverURL);
@@ -50,15 +50,14 @@ public final class DriverFactory {
                                 System.out.println("Exception occurs while creating driver instance " + e);
                                 return null;
                             }
-                        } else if (osName != null && osName.contains("Windows")) {
+                        } else if ((osName != null && osName.contains("Windows")) || (osName != null && osName.contains("Linux"))) {
                             System.out.println("Chrome running on Local/Windows OS");
                             return new ChromeDriver(setChromeCapability(PropertyUtils.get(ConfigProperties.HEADLESS)));
                         }
                         break;
 
                     case "firefox":
-                        if ((osName != null && osName.equalsIgnoreCase("linux")) ||
-                                Objects.equals(PropertyUtils.get(ConfigProperties.USESELENIUMGRID), "yes")) {
+                        if (Objects.equals(PropertyUtils.get(ConfigProperties.USESELENIUMGRID), "yes") && (osName != null && osName.equalsIgnoreCase("linux"))){
                             try {
                                 String firefoxDriverURL = PropertyUtils.get(ConfigProperties.GRIDURL);
                                 URL firefoxUrl = new URL(firefoxDriverURL);
@@ -68,7 +67,7 @@ public final class DriverFactory {
                                 System.out.println("Exception occurs while creating Firefox driver instance " + e);
                                 return null;
                             }
-                        } else if (osName != null && osName.contains("Windows")) {
+                        } else if ((osName != null && osName.contains("Windows")) || (osName != null && osName.contains("Linux"))) {
                             System.out.println("Firefox running on Local/Windows OS");
                             return new FirefoxDriver(setFirefoxCapability(PropertyUtils.get(ConfigProperties.HEADLESS)));
                         }
