@@ -50,7 +50,7 @@ public final class DriverFactory {
                                 System.out.println("Exception occurs while creating driver instance " + e);
                                 return null;
                             }
-                        } else if ((osName != null && osName.contains("Windows")) || (osName != null && osName.contains("Linux"))) {
+                        } else if ((osName != null && osName.contains("Windows")) || (osName != null && osName.contains("Linux")) || osName.contains("Mac")) {
                             System.out.println("Chrome running on Local/Windows OS");
                             return new ChromeDriver(setChromeCapability(PropertyUtils.get(ConfigProperties.HEADLESS)));
                         }
@@ -67,7 +67,7 @@ public final class DriverFactory {
                                 System.out.println("Exception occurs while creating Firefox driver instance " + e);
                                 return null;
                             }
-                        } else if ((osName != null && osName.contains("Windows")) || (osName != null && osName.contains("Linux"))) {
+                        } else if ((osName != null && osName.contains("Windows")) || (osName != null && osName.contains("Linux")) || osName.contains("Mac")) {
                             System.out.println("Firefox running on Local/Windows OS");
                             return new FirefoxDriver(setFirefoxCapability(PropertyUtils.get(ConfigProperties.HEADLESS)));
                         }
