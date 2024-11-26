@@ -22,6 +22,13 @@ def stop_docker_desktop_mac():
     except Exception as e:
         print(f"An error occurred while stopping Docker Desktop: {e}")
 
+def stop_docker_linux():
+    try:
+        subprocess.run(["sudo", "systemctl", "stop", "docker"], check=True)
+        print("Docker service has been stopped on Linux.")
+    except Exception as e:
+        print(f"An error occurred while stopping Docker service: {e}")
+
 def is_docker_stopped():
     try:
         result = subprocess.run(["docker", "info"], stdout=subprocess.PIPE, stderr=subprocess.PIPE, text=True)
@@ -41,5 +48,8 @@ if __name__ == "__main__":
     elif sys.platform == "darwin":
         stop_docker_desktop_mac()
         print("Docker Desktop has been successfully stopped.")
+    elif sys.platform == "linux" or sys.platform == "linux2":
+        stop_docker_linux()
+        print("Docker service has been successfully stopped on Linux.")
     else:
-        print("This script supports only Windows and macOS.")
+        print("This script supports only Windows, macOS, and Linux.")
