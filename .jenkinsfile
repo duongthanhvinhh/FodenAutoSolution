@@ -3,11 +3,11 @@ pipeline {
     parameters {
         string(name: 'StoryId', defaultValue: '', description: 'Input User Story Id: ')
         string(name: 'XmlSuite', defaultValue: '', description: 'Test Suite: (i.e testng)')
-        choice(name: 'branch', choices: getGitBranches(), description: 'Select a Git branch')
+        choice(name: 'BRANCH_NAME', choices: getGitBranches(), description: 'Select a Git branch')
     }
     tools {
         maven 'MAVEN_HOME' // Ensure this matches the Maven installation name in Jenkins
-        allure 'ALLURE_REPORT'
+//         allure 'ALLURE_REPORT'
     }
     environment {
         ALLURE_RESULTS_DIR = "allure-results-${env.BUILD_NUMBER}"
@@ -16,7 +16,7 @@ pipeline {
         stage('Checkout') {
             steps {
                 script {
-                    { checkout([$class: 'GitSCM', branches: [[name: params.branch]], userRemoteConfigs: [[url: 'https://github.com/duongthanhvinhh/FodenAutoSolution.git']]])
+                    checkout([$class: 'GitSCM', branches: [[name: params.BRANCH_NAME]], userRemoteConfigs: [[url: 'https://github.com/duongthanhvinhh/FodenAutoSolution.git']]])
                 }
             }
         }
