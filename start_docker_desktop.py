@@ -21,6 +21,15 @@ def start_docker_desktop_mac():
     except Exception as e:
         print(f"An error occurred: {e}")
 
+def start_docker_desktop_linux():
+    try:
+        password = 'foden'
+        process = subprocess.Popen(['sudo', '-S', 'systemctl', 'start', 'docker'], stdin=subprocess.PIPE, stderr=subprocess.PIPE)
+        process.communicate(input=password.encode() + b'\n')
+        print("Docker service started on Linux.")
+    except Exception as e:
+        print(f"An error occurred: {e}")
+
 def is_docker_ready():
     try:
         result = subprocess.run(["docker", "info"], stdout=subprocess.PIPE, stderr=subprocess.PIPE, text=True)
@@ -59,5 +68,7 @@ if __name__ == "__main__":
             print("Ready to run docker-compose.")
         else:
             print("Docker did not become ready.")
+    elif sys.platform == "linux" or sys.platform == "linux2":
+            print("Docker Engine is ready.")
     else:
-        print("This script supports only Windows and macOS.")
+        print("This script supports only Windows, macOS, and Linux.")

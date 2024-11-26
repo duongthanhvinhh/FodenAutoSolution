@@ -1,39 +1,48 @@
 pipeline {
     agent any
     parameters {
-        string(name: 'StoryId', defaultValue: '', description: 'Input User Story Id: ')
-        string(name: 'XmlSuite', defaultValue: '', description: 'Test Suite: (i.e testng)')
-        choice(name: 'BRANCH_NAME', choices: getGitBranches(), description: 'Select a Git branch')
+        string(name: 'StoryId', defaultValue: '', description: 'Input User Story Id')
+        string(name: 'XmlSuite', defaultValue: '', description: 'Test Suite (e.g., testng)')
     }
     tools {
         maven 'MAVEN_HOME' // Ensure this matches the Maven installation name in Jenkins
-//         allure 'ALLURE_REPORT'
+        allure 'ALLURE_REPORT'
     }
     environment {
         ALLURE_RESULTS_DIR = "allure-results-${env.BUILD_NUMBER}"
     }
     stages {
-        stage('Checkout') {
+        stage('Prepare Workspace') {
+            steps {
+                sh 'mkdir -p ${ALLURE_RESULTS_DIR}'
+                // If using Windows, replace 'sh' by 'bat'
+                // bat 'mkdir ${ALLURE_RESULTS_DIR}'
+            }
+        }
+        stage('Set Up Virtual Environment') {
             steps {
                 script {
-                    checkout([$class: 'GitSCM', branches: [[name: params.BRANCH_NAME]], userRemoteConfigs: [[url: 'https://github.com/duongthanhvinhh/FodenAutoSolution.git']]])
+                    sh '''
+                        sudo apt-get update
+                        sudo apt-get install -y python3-venv
+                        python3 -m venv myenv
+                        . myenv/bin/activate
+                        pip install docker
+                    '''
                 }
             }
         }
         stage('Start Selenium Grid') {
             steps {
-                powershell '''
-                    # Start Docker Desktop
-                    python start_docker_desktop.py
-                '''                
-                powershell '''
-                    # Start Selenium Grid using Docker Compose
-                    docker-compose up -d
-                '''
-                powershell '''
-                    # Check container status
-                    python check_container_status.py
-                '''
+                script {
+                    // Ensure the virtual environment is activated before running the scripts
+                    sh '''
+                        . myenv/bin/activate
+                        sudo bash -c 'source myenv/bin/activate && python3 start_docker_desktop.py'
+                        sudo bash -c 'source myenv/bin/activate && docker-compose up -d'
+                        sudo bash -c 'source myenv/bin/activate && python3 check_container_status.py'
+                    '''
+                }
             }
         }
         stage('Run Tests') {
@@ -41,41 +50,30 @@ pipeline {
                 script {
                     def storyId = params.StoryId
                     def xmlSuite = params.XmlSuite
-                    def ALLURE_RESULTS_DIR = params.ALLURE_RESULTS_DIR
-                    powershell """
-                        Write-Host "StoryId: ${params.StoryId}"
-                        Write-Host "XmlSuite: ${params.XmlSuite}"
-                        mvn clean test "-DsuiteXmlFile=${params.XmlSuite}.xml" "-Dgroups=${params.StoryId}" "-Dallure.results.directory=${env.ALLURE_RESULTS_DIR}"
+                    sh """
+                        . myenv/bin/activate
+                        echo "StoryId: ${storyId}"
+                        echo "XmlSuite: ${xmlSuite}"
+                        mvn clean test -DsuiteXmlFile=${xmlSuite}.xml -Dgroups=${storyId} -Dallure.results.directory=${env.ALLURE_RESULTS_DIR}
                     """
                 }
             }
         }
-        // stage('Generate Allure Report') {
-        //     steps {
-        //         script {
-        //             powershell "allure generate ${env.ALLURE_RESULTS_DIR} -o allure-report-${env.BUILD_NUMBER} --clean"
-        //         }
-        //     }
-        // }
     }
     post {
         always {
             script {
-                powershell '''
-                    # Stop Docker containers and clean up
-                    docker-compose down
+                sh '''
+                    . myenv/bin/activate
+                    sudo bash -c 'source myenv/bin/activate && docker-compose down'
+                    sudo bash -c 'source myenv/bin/activate && python3 stop_docker_desktop.py'
                 '''
-                powershell '''
-                    # Stop Docker Desktop
-                    python stop_docker_desktop.py
-                '''                
-                // Publish Allure report
                 allure([
                     includeProperties: false,
                     jdk: '',
                     properties: [],
                     reportBuildPolicy: 'ALWAYS',
-                    results: [[path: "${env.ALLURE_RESULTS_DIR}"]]
+                    results: [[path: "${ALLURE_RESULTS_DIR}"]]
                 ])
             }
         }
