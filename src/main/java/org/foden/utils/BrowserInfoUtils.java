@@ -26,11 +26,11 @@ public final class BrowserInfoUtils {
     }
 
     public static boolean isWindows() {
-        return (OS.contains("win"));
+        return ((OS.contains("win") || (OS.contains("Win"))));
     }
 
     public static boolean isMac() {
-        return (OS.contains("mac"));
+        return ((OS.contains("mac") || (OS.contains("Mac"))));
     }
 
     public static boolean isUnix() {
