@@ -3,6 +3,7 @@ pipeline {
     parameters {
         string(name: 'StoryId', defaultValue: '', description: 'Input User Story Id: ')
         string(name: 'XmlSuite', defaultValue: '', description: 'Test Suite: (i.e testng)')
+        choice(name: 'branch', choices: getGitBranches(), description: 'Select a Git branch')
     }
     tools {
         maven 'MAVEN_HOME' // Ensure this matches the Maven installation name in Jenkins
@@ -12,15 +13,11 @@ pipeline {
         ALLURE_RESULTS_DIR = "allure-results-${env.BUILD_NUMBER}"
     }
     stages {
-        stage('Prepare Workspace') {
+        stage('Checkout') {
             steps {
-                powershell '''
-                    # Create a new directory for this build's Allure results
-                    New-Item -Path $env:ALLURE_RESULTS_DIR -ItemType Directory -Force
-
-                    # Optionally, clean up old result directories here if needed
-                    # Get-ChildItem -Path "allure-results-*" | Where-Object { $_.Name -ne $env:ALLURE_RESULTS_DIR } | Remove-Item -Recurse -Force
-                '''
+                script {
+                    { checkout([$class: 'GitSCM', branches: [[name: params.branch]], userRemoteConfigs: [[url: 'https://github.com/duongthanhvinhh/FodenAutoSolution.git']]])
+                }
             }
         }
         stage('Start Selenium Grid') {
