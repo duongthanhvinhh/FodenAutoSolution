@@ -54,6 +54,7 @@ pipeline {
                         . myenv/bin/activate
                         echo "StoryId: ${storyId}"
                         echo "XmlSuite: ${xmlSuite}"
+                        echo "mvn clean test -DsuiteXmlFile=${xmlSuite}.xml -Dgroups=${storyId} -Dallure.results.directory=${env.ALLURE_RESULTS_DIR}"
                         mvn clean test -DsuiteXmlFile=${xmlSuite}.xml -Dgroups=${storyId} -Dallure.results.directory=${env.ALLURE_RESULTS_DIR}
                     """
                 }
