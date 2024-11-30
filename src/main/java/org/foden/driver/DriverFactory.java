@@ -2,6 +2,7 @@ package org.foden.driver;
 
 import io.qameta.allure.Allure;
 import org.foden.enums.ConfigProperties;
+import org.foden.utils.BrowserInfoUtils;
 import org.foden.utils.PropertyUtils;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.chrome.ChromeDriver;
@@ -40,7 +41,7 @@ public final class DriverFactory {
             switch (PropertyUtils.get(ConfigProperties.BROWSER).toLowerCase()){
                     case "edge":
                     case "chrome":
-                        if (Objects.equals(PropertyUtils.get(ConfigProperties.USESELENIUMGRID), "yes") && (osName != null && osName.equalsIgnoreCase("linux"))){
+                        if (Objects.equals(PropertyUtils.get(ConfigProperties.USESELENIUMGRID), "yes") && (osName != null && BrowserInfoUtils.isUnix())){
                             try{
                                 String chromeDriverURL = PropertyUtils.get(ConfigProperties.GRIDURL);
                                 URL chromeUrl = new URL(chromeDriverURL);
@@ -50,14 +51,14 @@ public final class DriverFactory {
                                 System.out.println("Exception occurs while creating driver instance " + e);
                                 return null;
                             }
-                        } else if ((osName != null && osName.contains("Windows")) || (osName != null && osName.contains("Linux")) || osName.contains("Mac")) {
+                        } else if ((osName != null && BrowserInfoUtils.isWindows()) || (osName != null && BrowserInfoUtils.isUnix()) || BrowserInfoUtils.isMac()) {
                             System.out.println("Chrome running on Local/Windows OS");
                             return new ChromeDriver(setChromeCapability(PropertyUtils.get(ConfigProperties.HEADLESS)));
                         }
                         break;
 
                     case "firefox":
-                        if (Objects.equals(PropertyUtils.get(ConfigProperties.USESELENIUMGRID), "yes") && (osName != null && osName.equalsIgnoreCase("linux"))){
+                        if (Objects.equals(PropertyUtils.get(ConfigProperties.USESELENIUMGRID), "yes") && (osName != null && BrowserInfoUtils.isUnix())){
                             try {
                                 String firefoxDriverURL = PropertyUtils.get(ConfigProperties.GRIDURL);
                                 URL firefoxUrl = new URL(firefoxDriverURL);
@@ -67,7 +68,7 @@ public final class DriverFactory {
                                 System.out.println("Exception occurs while creating Firefox driver instance " + e);
                                 return null;
                             }
-                        } else if ((osName != null && osName.contains("Windows")) || (osName != null && osName.contains("Linux")) || osName.contains("Mac")) {
+                        } else if ((osName != null && BrowserInfoUtils.isWindows()) || (osName != null && BrowserInfoUtils.isUnix()) || BrowserInfoUtils.isMac()) {
                             System.out.println("Firefox running on Local/Windows OS");
                             return new FirefoxDriver(setFirefoxCapability(PropertyUtils.get(ConfigProperties.HEADLESS)));
                         }
@@ -109,7 +110,7 @@ public final class DriverFactory {
 
         options.addArguments("--disable-notifications");
 
-        if (osName != null && osName.equalsIgnoreCase("linux")) {
+        if (osName != null && BrowserInfoUtils.isUnix()) {
             options.addArguments("--disable-dev-shm-usage");
             options.addArguments("--no-sandbox");
             options.addArguments("start-maximized");
@@ -117,7 +118,7 @@ public final class DriverFactory {
             options.addArguments("--disable-gpu");
             String user_agent = "Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/60.0.3112.50 Safari/537.36";
             options.addArguments("--user-agent=" + user_agent);
-        } else if (osName != null && osName.contains("Windows")) {
+        } else if (osName != null && BrowserInfoUtils.isWindows()) {
             options.addArguments("--remote-allow-origins=*");
         }
 
