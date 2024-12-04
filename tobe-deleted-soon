@@ -1,0 +1,359 @@
+47. Enums
+        Enumerations is a fixed set of constants
+        Enum provides type-safe checking
+            => So it's impossible to create an invalid enum value
+        Simple enums:
+                Enums which don't have constructors, don't have any methods
+                It is just a list of constant values which you can use at your convenience
+                Example:
+                        public enum Compass{
+                            NORTH, SOUTH, EAST, WEST; //This semicolon (;) is optional for simple enums
+                        }
+                        Compass N = Compass.NORTH; //alternative: Compass.valueOf("NORTH");
+                        System.out.println(N); //Output is: NORTH
+                        System.out.println(N == Compass.NORTH); //Output is: true
+                        for(var direction : Compass.values()){  //Compass.values() returns an array of values
+                            System.out.println(direction.ordinal() + " : " + direction.name());
+                            //direction.ordinal() returns order of a value, direction.name() returns name of a value
+                            //Output is:
+                                    0 : NORTH
+                                    1 : SOUTH
+                                    2 : EAST
+                                    3 : WEST
+                        }
+        Enums are often used in switch
+                Example:
+                        public enum Compass{
+                            NORTH, SOUTH, EAST, WEST; //This semicolon (;) is optional for simple enums
+                        }
+                        Compass N = Compass.NORTH;
+                        switch(N){
+                            case NORTH -> System.out.println("You are headed North.");
+                            case SOUTH -> System.out.println("You are headed South.");
+                            default -> System.out.println("Get back!");
+                            /* wrong syntax
+                            case Compass.NORTH ->
+                            case 1 ->
+                            */
+                        }
+        Enums can have constructors and instance methods
+                Example:
+                        enum Compass{
+                            NORTH("Move Up"), SOUTH("Move Down"), EAST("Move Right"), WEST("Move Left"); //This semicolon (;) here is required
+                            private final String instruction;
+                            private Compass(String instruction){ //enum constructor
+                                this.instruction = instruction;
+                            }
+                            public void printInstruction(){  //enum method
+                                System.out.println(instruction);
+                            }
+                        }
+                        public class MyTest{
+                            public static void main(String[] args){
+                                Compass.NORTH.printInstruction();  //Output is: Move Up
+                            }
+                        }
+        Enums can implement abstract methods
+                Example:
+                        enum Compass{
+                            NORTH{
+                                public String getDirection() { return "Up"; } //implementation of getDirection() abstract method
+                            },
+                            SOUTH{
+                                public String getDirection() { return "Down"; } //implementation of getDirection() abstract method
+                            },
+                            EAST{
+                                public String getDirection() { return "Right"; } //implementation of getDirection() abstract method
+                            },
+                            WEST{
+                                public String getDirection() { return "Left"; } //implementation of getDirection() abstract method
+                            }; //This semicolon(;) here is required
+                            public abstract String getDirection(); //abstract method
+                        }
+                        public class MyTest{
+                            public static void main(String[] args){
+                                System.out.println(Compass.NORTH.getDirection());  //Output is: Up
+                            }
+                        }
+        Methods can be overridden by certain enums only
+                Example:
+                        enum Compass{
+                            NORTH{
+                                public String getDirection() { return "Up"; } //Overriding getDirection() method
+                            },
+                            SOUTH{
+                                public String getDirection() { return "Down"; } //Overriding getDirection() method
+                            },
+                            EAST, WEST; // do not override, so it will use default implementation of getDirection() method
+                            public String getDirection() { return "Sideways"; }
+                        }
+                        public class MyTest{
+                            public static void main(String[] args){
+                                System.out.println(Compass.NORTH.getDirection());  //Output is: Up
+                                System.out.println(Compass.EAST.getDirection());  //Output is: Sideways
+                            }
+                        }
+        Enums cannot extend a class, but can implement an interface
+                Example:
+                        interface Planet{
+                            String getPlaneName();
+                        }
+                        public enum Compass implements Planet{
+                            NORTH, SOUTH, EAST, WEST;
+                            public String getPlanetName(){
+                                return "Earth";
+                            }
+                        }
+                        public class MyClass{
+                            public static void main(String[] args){
+                                System.out.println(Compass.SOUTH.getPlanetName()); //Output is: Earth
+                            }
+                        }
+48. Sealed Classes
+        Used to restrict which other classes may directly extend your class
+        New keywords: sealed, non-sealed, permits
+        Sealed classes must be declared in the same package as its direct subclasses
+        Every listed subclass must extend the sealed class
+        Every subclass must have one of these class modifiers:
+            final, sealed, non-sealed
+................................................................
+
+49. Records
+................................................................
+        We can override auto-generated constructor
+        This is called "canonical constructor"
+        Example:
+                public record Student(String firstName, String lastName, int id){
+                    public Student(String firstName, String lastName, int id){
+                        if( id < 10 || id > 1_000_000) throw new IllegalArgumentException();
+                        this.firstName = firstName;
+                        this.lastName = lastName;
+                        this.id = id;
+                    }
+                }
+        There is a simpler way => "Compact constructor"
+        Example:
+                public record(String firstName, String lastName, int id){
+                    if( id < 10 || id > 1_000_000) throw new IllegalArgumentException();
+                }
+50. Nested Classes
+        Is a class defined within another class
+        There are several types of nested class
+            INNER CLASS -> Non-static type, defined at the member level of a class
+            STATIC NESTED CLASS -> static type, defined at the member level of a class
+            LOCAL CLASS -> a class defined within a method body
+            ANONYMOUS CLASS -> local class which doesn't have a name
+        INNER CLASS:
+            Can have access modifier
+            Can extend another class and/or implement interfaces
+            Can be marked abstract or final
+            Can access all members of the enclosing class (including private members)
+            Example:
+                    public class A{
+                        private String str = "Foden";
+                        protected class B{
+                            private static void printOut(String s){
+                                System.out.println(s);
+                            }
+                            public void printFodenTwice(){
+                                printOut(str);
+                                printOut(str);
+                            }
+                        }
+                        public void printTwice(){
+                            var b = new B();
+                            b.printHelloTwice();
+                        }
+                        public static void main(String[] args){
+                            var a = new A();
+                            a.printTwice();
+                        }
+                    }
+            If method is not static you have to make an instance before calling it
+            Example: let's see the above example, how to call printFodenTwice() inside main
+                    public static void main(String[] args){
+                        var a = new A();
+                        var b = a.new B();
+                        b.printlnFodenTwice();
+                    }
+            Example: Another way even shorter, but more uglier
+                    public static void main(String[] args){
+                        new A().new B().printFodenTwice();
+                    }
+            Nested classes can have their own nested classes
+            Example:
+                    public class A {
+                        private int t = 1;
+                        class B {
+                            private int t = 2;
+                            class C {
+                                private int t = 3;
+                                public void printT() {
+                                    System.out.println(t);
+                                    System.out.println(this.t);
+                                    System.out.println(B.this.t);
+                                    System.out.println(A.this.t);
+                                }
+                            }
+                        }
+                        public static void main(String[] args) {
+                            //Initialize all classes
+                            A a = new A();
+                            B b = a.new B();
+                            B.C c = b.new C();
+                            c.printT();
+                            //Output is
+                            3
+                            3
+                            2
+                            1
+                        }
+                    }
+        STATIC NESTED CLASS
+            Can't access instance variables or methods declared in the outer lass
+            You don't need an instance of the wider class to access it
+            Can be marked private or protected
+            Example:
+                    public class State {
+                        static class Town {
+                            private int type = 1;
+                        }
+                        public static void main(String[] args){
+                            Town town = new Town(); //if Town class is non static -> Town town = new State().new Town();
+                            System.out.println(town.type);
+                        }
+                    }
+        LOCAL CLASS
+            Nested class defined within the method - limited scope
+            Don't have access modifier
+            Can be declared abstract or final
+            Can access all members of the enclosing class
+            Can access final and effectively final local variables
+            Example:
+                    //calculate and print area of the rectangle
+                    public class PrintArea{
+                        private int a = 10;
+                        public void calculateArea(){
+                            final int b = 15;
+                            class Computer{ //Note: class Computer can access both a and b
+                                public void multiply(){
+                                    System.out.println(a*b);
+                                }
+                            }
+                            var computer = new Computer();
+                            computer.multiply();
+                        }
+                        public static void main(String[] args){
+                            var printArea = new PrintArea();
+                            printArea.calculateArea();
+                        }
+                    }
+        ANONYMOUS CLASS
+            Special type of local class which doesn't have a name
+            Must extend an existing class or implement an existing interface
+            Example 1:
+                    public class Store{
+                        abstract class Sale{
+                            abstract int discount();
+                        }
+                        public int newPrice(int oldPrice){
+                            Sale sale = new Sale(){  //sale here is an instance of anonymous class inside the {...}
+                                int discount() { return 2; }
+                            };
+                        }
+                    }
+            Example 2: It works with interfaces as well
+                    public class Store {
+                        interface Sale {
+                            int discount();
+                        }
+                        public int newPrice(int oldPrice){
+                            Sale sale = new Sale(){
+                                public int discount() { return 2; }
+                            };
+                            return oldPrice - sale.discount();
+                        }
+                    }
+            Example 3: Exam trick "empty interface"
+                    public class Dog{
+                        interface Eats {}
+                        Eats eating = new Eats {}; //OK
+                    }
+51. Polymorphism
+        Property of the object to take many different forms (poly = many, morph = form)
+        To access an Java object, we have to have a reference pointing to that object
+        There are three ways to access the Java object:
+            Using reference with the same type as the object
+            Using reference that is superclass of the object
+            Using interface reference
+        Example:
+                public class Dog {
+                    public boolean canRun() { return true; }
+                }
+                public interface CanRun { boolean canRanFast(); }
+                public class Antony extends Dog implements CanRun {
+                    public boolean canRanFast() { return false; }
+                    public int weight = 6;
+                    public static void main(String[] args){
+                        Antony antony = new Antony();
+                        System.out.println(antony.weight);
+                        Dog dog = antony;
+                        System.out.println(dog.canRun());
+                        CanRun canRun = antony;
+                        System.out.println(canRun.canRanFast());
+                        //Output is:
+                            6
+                            true
+                            false
+                        ==> NOTE: only one object is created here (Antony - A in uppercase)!!!
+                    }
+                }
+        Once you create a new reference, only the members of that reference type are accessible via that reference !!
+                Explain:
+                        CanRun canRun = new Antony(); //reference canRun points to Antony object
+                        System.out.println(canRun.weight); //DOES NOT COMPILE, weight is not a member of CanRun interface
+        Object vs Reference
+                The type of the object determines which properties exist within the object in memory
+                The type of the reference to the object determines which methods and variables are accessible to the Java program
+                Explain:
+                    Reference                               Object in memory (Antony)
+                    antony  ------------------------------->|---------------------------------------------
+                    dog     ------------------------------->| weight = 6, canRun(), canRunFast()         |
+                    canRun  ------------------------------->|---------------------------------------------
+        Casting objects
+                Antony antony = new Antony();
+                Dog dog = antony; //OK ==> Implicit casting to a supertype
+                Antony secondAntony = (Antony) dog; //OK ==> Explicit cast to subtype
+                Antony thirdAntony = dog; //DOES NOT COMPILE, cannot put larger in smaller without the explicit cast
+        Overriding methods
+                Example:
+                        class Dog {
+                            public int getSpeed() { return 20; }
+                            public void printSpeed() { System.out.println(this.getSpeed()); }
+                        }
+                        public class GreatDane extends Dog {
+                            @Override
+                            public int getSpeed() { return 35; }
+                            public static void main(String[] args) {
+                                new GreatDane().printSpeed(); //Output is 35, since getSpeed() is overridden in a subclass,
+                                                              //all calls to this method will be replaced at the runtime!
+                            }
+                        }
+
+                Example 2: Static methods are not polymorphic, meaning they are not overridden in the same way instance methods are, instead, they are called based on the reference type
+                        class Cat {
+                            protected int age = 5;
+                            public static boolean isWild() { return false; }
+                        }
+                        public class Tiger extends Cat {
+                            protected int age = 7;
+                            public static boolean isWild() { return true; }
+                            public static void main(String[] args){
+                                Tiger dave = new Tiger();
+                                Cat rave = dave;
+                                System.out.println(dave.isWild()); //true
+                                System.out.println(rave.isWild()); //false, because isWild() is static so it'll be called based on the reference type which is Cat here.
+                                System.out.println(dave.age); //7
+                                System.out.println(rave.age); //5
+                            }
+                        }
