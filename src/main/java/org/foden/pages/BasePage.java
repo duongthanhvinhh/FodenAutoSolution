@@ -16,8 +16,6 @@ import org.openqa.selenium.remote.LocalFileDetector;
 import org.openqa.selenium.remote.RemoteWebElement;
 import org.openqa.selenium.support.PageFactory;
 import org.openqa.selenium.support.ui.*;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.testng.Assert;
 import org.testng.asserts.SoftAssert;
 import org.foden.enums.TimeEntity;
@@ -38,7 +36,6 @@ import org.json.JSONObject;
 import org.json.JSONTokener;
 
 import static org.foden.utils.FileDirectoryUtils.getDownloadPath;
-import static org.testng.Assert.assertTrue;
 
 public class BasePage {
 
