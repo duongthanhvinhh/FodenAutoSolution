@@ -1,6 +1,5 @@
 package org.foden.listeners;
 
-import io.qameta.allure.Allure;
 import io.qameta.allure.Attachment;
 import org.apache.commons.io.FileUtils;
 import org.foden.driver.WebDriverProvider;
