@@ -10,20 +10,31 @@ pipeline {
     }
     environment {
         ALLURE_RESULTS_DIR = "allure-results-${env.BUILD_NUMBER}"
+        PATH = "/usr/local/bin:$PATH"  // Ensure docker and docker-compose are in the PATH
     }
     stages {
         stage('Prepare Workspace') {
             steps {
-                sh 'mkdir -p ${ALLURE_RESULTS_DIR}'
-                // If using Windows, replace 'sh' by 'bat'
-                // bat 'mkdir ${ALLURE_RESULTS_DIR}'
+                sh '''
+                    mkdir -p ${ALLURE_RESULTS_DIR}
+                '''
             }
         }
         stage('Start Selenium Grid') {
             steps {
                 script {
-                    // Ensure the virtual environment is activated before running the scripts
+                    // Ensure Docker is running and start containers
                     sh '''
+                        # Ensure Docker Desktop is running (macOS)
+                        if ! pgrep -x "Docker" > /dev/null; then
+                            echo "Docker Desktop is not running. Starting Docker Desktop..."
+                            open -a Docker
+                            sleep 30  # Wait for Docker to initialize
+                        else
+                            echo "Docker Desktop is already running."
+                        fi
+
+                        # Start Docker Compose containers
                         python3 start_docker_desktop.py
                         docker-compose up -d
                         python3 check_container_status.py
@@ -37,10 +48,14 @@ pipeline {
                     def storyId = params.StoryId
                     def xmlSuite = params.XmlSuite
                     sh """
-                        . myenv/bin/activate
+                        # Activate the virtual environment
+                        source myenv/bin/activate
+
+                        # Print the parameters
                         echo "StoryId: ${storyId}"
                         echo "XmlSuite: ${xmlSuite}"
-                        echo "mvn clean test -DsuiteXmlFile=${xmlSuite}.xml -Dgroups=${storyId} -Dallure.results.directory=${env.ALLURE_RESULTS_DIR}"
+
+                        # Run Maven tests with Allure results
                         mvn clean test -DsuiteXmlFile=${xmlSuite}.xml -Dgroups=${storyId} -Dallure.results.directory=${env.ALLURE_RESULTS_DIR}
                     """
                 }
@@ -50,10 +65,12 @@ pipeline {
     post {
         always {
             script {
+                // Clean up Docker containers
                 sh '''
                     docker-compose down
                     python3 stop_docker_desktop.py
                 '''
+                // Generate Allure report
                 allure([
                     includeProperties: false,
                     jdk: '',
