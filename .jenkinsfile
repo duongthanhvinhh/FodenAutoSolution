@@ -26,16 +26,15 @@ pipeline {
                     // Ensure Docker is running and start containers
                     sh '''
                         # Ensure Docker Desktop is running (macOS)
-                        if ! pgrep -x "Docker" > /dev/null; then
-                            echo "Docker Desktop is not running. Starting Docker Desktop..."
-                            open -a Docker
-                            sleep 30  # Wait for Docker to initialize
-                        else
-                            echo "Docker Desktop is already running."
-                        fi
+//                         if ! pgrep -x "Docker" > /dev/null; then
+//                             echo "Docker Desktop is not running. Starting Docker Desktop..."
+//                             python3 start_docker_desktop.py
+//                             sleep 30  # Wait for Docker to initialize
+//                         else
+//                             echo "Docker Desktop is already running."
+//                         fi
 
                         # Start Docker Compose containers
-                        python3 start_docker_desktop.py
                         docker-compose up -d
                         python3 check_container_status.py
                     '''
