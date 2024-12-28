@@ -19,28 +19,14 @@ pipeline {
                 // bat 'mkdir ${ALLURE_RESULTS_DIR}'
             }
         }
-        stage('Set Up Virtual Environment') {
-            steps {
-                script {
-                    sh '''
-                        sudo apt-get update
-                        sudo apt-get install -y python3-venv
-                        python3 -m venv myenv
-                        . myenv/bin/activate
-                        pip install docker
-                    '''
-                }
-            }
-        }
         stage('Start Selenium Grid') {
             steps {
                 script {
                     // Ensure the virtual environment is activated before running the scripts
                     sh '''
-                        . myenv/bin/activate
-                        sudo bash -c 'source myenv/bin/activate && python3 start_docker_desktop.py'
-                        sudo bash -c 'source myenv/bin/activate && docker-compose up -d'
-                        sudo bash -c 'source myenv/bin/activate && python3 check_container_status.py'
+                        python3 start_docker_desktop.py
+                        docker-compose up -d
+                        python3 check_container_status.py
                     '''
                 }
             }
@@ -65,9 +51,8 @@ pipeline {
         always {
             script {
                 sh '''
-                    . myenv/bin/activate
-                    sudo bash -c 'source myenv/bin/activate && docker-compose down'
-                    sudo bash -c 'source myenv/bin/activate && python3 stop_docker_desktop.py'
+                    docker-compose down
+                    python3 stop_docker_desktop.py
                 '''
                 allure([
                     includeProperties: false,
