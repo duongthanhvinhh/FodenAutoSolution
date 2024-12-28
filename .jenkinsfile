@@ -48,9 +48,6 @@ pipeline {
                     def storyId = params.StoryId
                     def xmlSuite = params.XmlSuite
                     sh """
-                        # Activate the virtual environment
-                        source myenv/bin/activate
-
                         # Print the parameters
                         echo "StoryId: ${storyId}"
                         echo "XmlSuite: ${xmlSuite}"
