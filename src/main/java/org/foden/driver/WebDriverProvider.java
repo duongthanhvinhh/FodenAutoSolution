@@ -3,12 +3,15 @@ package org.foden.driver;
 import io.qameta.allure.Allure;
 import io.qameta.allure.Step;
 import org.foden.constants.FrameworkConstants;
+import org.foden.enums.ConfigProperties;
+import org.foden.utils.PropertyUtils;
 import org.openqa.selenium.WebDriver;
 import org.testng.Assert;
 
 import java.awt.*;
 import java.time.Duration;
 import java.time.Instant;
+import java.util.Objects;
 
 public class WebDriverProvider {
 
@@ -34,7 +37,7 @@ public class WebDriverProvider {
             long seconds = Duration.between(start, end).getSeconds();
             System.out.println("The browser took " + seconds + " seconds to launch.");
             //In Linux box do not resize the window
-            if(osName!=null && osName.equalsIgnoreCase("linux")){
+            if((osName!=null && osName.equalsIgnoreCase("linux")) || (Objects.equals(PropertyUtils.get(ConfigProperties.USESELENIUMGRID), "yes"))){
                 DriverFactory.webDriverHashmap.get(Thread.currentThread().getId()).get().manage().window().maximize();
                 System.out.println("**************maximized****************");
                 System.out.println("linux box");

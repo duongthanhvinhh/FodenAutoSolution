@@ -2,7 +2,7 @@ pipeline {
     agent any
     parameters {
         string(name: 'StoryId', defaultValue: '', description: 'Input User Story Id')
-        string(name: 'XmlSuite', defaultValue: '', description: 'Test Suite (e.g., testng)')
+//         string(name: 'XmlSuite', defaultValue: '', description: 'Test Suite (e.g., testng)')
     }
     tools {
         maven 'MAVEN_HOME' // Ensure this matches the Maven installation name in Jenkins
@@ -10,38 +10,18 @@ pipeline {
     }
     environment {
         ALLURE_RESULTS_DIR = "allure-results-${env.BUILD_NUMBER}"
+        PATH = "/usr/local/bin:$PATH"
     }
     stages {
         stage('Prepare Workspace') {
             steps {
                 sh 'mkdir -p ${ALLURE_RESULTS_DIR}'
-                // If using Windows, replace 'sh' by 'bat'
-                // bat 'mkdir ${ALLURE_RESULTS_DIR}'
-            }
-        }
-        stage('Set Up Virtual Environment') {
-            steps {
-                script {
-                    sh '''
-                        sudo apt-get update
-                        sudo apt-get install -y python3-venv
-                        python3 -m venv myenv
-                        . myenv/bin/activate
-                        pip install docker
-                    '''
-                }
             }
         }
         stage('Start Selenium Grid') {
             steps {
                 script {
-                    // Ensure the virtual environment is activated before running the scripts
-                    sh '''
-                        . myenv/bin/activate
-                        sudo bash -c 'source myenv/bin/activate && python3 start_docker_desktop.py'
-                        sudo bash -c 'source myenv/bin/activate && docker-compose up -d'
-                        sudo bash -c 'source myenv/bin/activate && python3 check_container_status.py'
-                    '''
+                    sh 'docker-compose up -d'
                 }
             }
         }
@@ -50,13 +30,21 @@ pipeline {
                 script {
                     def storyId = params.StoryId
                     def xmlSuite = params.XmlSuite
-                    sh """
-                        . myenv/bin/activate
-                        echo "StoryId: ${storyId}"
-                        echo "XmlSuite: ${xmlSuite}"
+//                     sh """
+//                         echo "StoryId: ${storyId}"
+//                         echo "XmlSuite: ${xmlSuite}"
+//                         echo "mvn clean test -DsuiteXmlFile=${xmlSuite}.xml -Dgroups=${storyId} -Dallure.results.directory=${env.ALLURE_RESULTS_DIR}"
+//                         mvn clean test -DsuiteXmlFile=${xmlSuite}.xml -Dgroups=${storyId} -Dallure.results.directory=${env.ALLURE_RESULTS_DIR}
+//                     """
+                    if (storyId?.trim()) {
+                        echo "Running tests with StoryId: ${storyId}"
                         echo "mvn clean test -DsuiteXmlFile=${xmlSuite}.xml -Dgroups=${storyId} -Dallure.results.directory=${env.ALLURE_RESULTS_DIR}"
-                        mvn clean test -DsuiteXmlFile=${xmlSuite}.xml -Dgroups=${storyId} -Dallure.results.directory=${env.ALLURE_RESULTS_DIR}
-                    """
+                        sh "mvn clean test -DsuiteXmlFile=${xmlSuite}.xml -Dgroups=${storyId} -Dallure.results.directory=${env.ALLURE_RESULTS_DIR}"
+                    } else {
+                        echo "Running tests without StoryId"
+                        echo "mvn clean test -DsuiteXmlFile=${xmlSuite}.xml -Dallure.results.directory=${env.ALLURE_RESULTS_DIR}"
+                        sh "mvn clean test -DsuiteXmlFile=${xmlSuite}.xml -Dallure.results.directory=${env.ALLURE_RESULTS_DIR}"
+                    }
                 }
             }
         }
@@ -64,11 +52,7 @@ pipeline {
     post {
         always {
             script {
-                sh '''
-                    . myenv/bin/activate
-                    sudo bash -c 'source myenv/bin/activate && docker-compose down'
-                    sudo bash -c 'source myenv/bin/activate && python3 stop_docker_desktop.py'
-                '''
+                sh 'docker-compose down'
                 allure([
                     includeProperties: false,
                     jdk: '',

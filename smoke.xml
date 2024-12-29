@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE suite SYSTEM "https://testng.org/testng-1.0.dtd">
+
+<suite name="SMOKE" parallel="methods" thread-count="8">
+    <listeners>
+        <listener  class-name="org.foden.listeners.AllureListener"/>
+    </listeners>
+    <test name="Smoke TestSuite">
+        <groups>
+            <run>
+                <include name="SMOKE" />
+                <exclude name="BUG" />
+                <exclude name="REGRESSION" />
+                <!-- This is required to implicitly exclude all other tests as Regression -->
+            </run>
+        </groups>
+        <classes>
+            <class name="org.foden.tests.LoginTests"/>
+        </classes>
+    </test> <!-- Test -->
+</suite> <!-- Suite -->

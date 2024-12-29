@@ -111,6 +111,14 @@ public class LoginPage extends BasePage{
         click(loginButton, true);
     }
 
+    @Step("Spam click login button")
+    public void spamClickLogin(int times) {
+        while (times > 0){
+            click(loginButton, true);
+            times--;
+        }
+    }
+
     @Step("Verify login successfully")
     public boolean verifyLoginSuccessfully(String partialUrl) {
         return checkForElementVisibility(logoutButtonAtBottomRight) && isUrlContains(partialUrl);
