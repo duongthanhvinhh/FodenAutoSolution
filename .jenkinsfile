@@ -2,7 +2,7 @@ pipeline {
     agent any
     parameters {
         string(name: 'StoryId', defaultValue: '', description: 'Input User Story Id')
-        string(name: 'XmlSuite', defaultValue: '', description: 'Test Suite (e.g., testng)')
+//         string(name: 'XmlSuite', defaultValue: '', description: 'Test Suite (e.g., testng)')
     }
     tools {
         maven 'MAVEN_HOME' // Ensure this matches the Maven installation name in Jenkins
@@ -30,12 +30,21 @@ pipeline {
                 script {
                     def storyId = params.StoryId
                     def xmlSuite = params.XmlSuite
-                    sh """
-                        echo "StoryId: ${storyId}"
-                        echo "XmlSuite: ${xmlSuite}"
+//                     sh """
+//                         echo "StoryId: ${storyId}"
+//                         echo "XmlSuite: ${xmlSuite}"
+//                         echo "mvn clean test -DsuiteXmlFile=${xmlSuite}.xml -Dgroups=${storyId} -Dallure.results.directory=${env.ALLURE_RESULTS_DIR}"
+//                         mvn clean test -DsuiteXmlFile=${xmlSuite}.xml -Dgroups=${storyId} -Dallure.results.directory=${env.ALLURE_RESULTS_DIR}
+//                     """
+                    if (storyId?.trim()) {
+                        echo "Running tests with StoryId: ${storyId}"
                         echo "mvn clean test -DsuiteXmlFile=${xmlSuite}.xml -Dgroups=${storyId} -Dallure.results.directory=${env.ALLURE_RESULTS_DIR}"
-                        mvn clean test -DsuiteXmlFile=${xmlSuite}.xml -Dgroups=${storyId} -Dallure.results.directory=${env.ALLURE_RESULTS_DIR}
-                    """
+                        sh "mvn clean test -DsuiteXmlFile=${xmlSuite}.xml -Dgroups=${storyId} -Dallure.results.directory=${env.ALLURE_RESULTS_DIR}"
+                    } else {
+                        echo "Running tests without StoryId"
+                        echo "mvn clean test -DsuiteXmlFile=${xmlSuite}.xml -Dallure.results.directory=${env.ALLURE_RESULTS_DIR}"
+                        sh "mvn clean test -DsuiteXmlFile=${xmlSuite}.xml -Dallure.results.directory=${env.ALLURE_RESULTS_DIR}"
+                    }
                 }
             }
         }

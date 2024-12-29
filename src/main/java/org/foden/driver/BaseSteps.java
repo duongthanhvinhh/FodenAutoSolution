@@ -114,22 +114,6 @@ public class BaseSteps extends WebDriverProvider {
         }, 180, 180, TimeUnit.SECONDS);
     }
 
-    @AfterMethod
-    public void tearDown(ITestResult iTestResult) throws IOException {
-        Log4jUtils.info("Updating result of script " + iTestResult.getName() + " to report :: updateTestStatus");
-        if (iTestResult.getStatus()==ITestResult.FAILURE){
-            File screenshot = AllureListener.takeScreenshot(WebDriverProvider.getDriver(), iTestResult.getName());
-            Allure.addAttachment("Page Screenshot", FileUtils.openInputStream(screenshot));
-        }
-        try {
-            System.out.println("Closing browser in tearDown After Method");
-            DriverFactory.getInstance().removeDriver();
-        } catch (Exception e){
-            System.out.println("exit");
-            Allure.addAttachment("Close Browser in tearDown FAILED (Potentially crashed)", e.getMessage());
-        }
-    }
-
     @AfterMethod(alwaysRun = true)
     public void afterMethod(ITestResult iTestResult, Method method){
         Story storyAnnotation = method.getAnnotation(Story.class);
@@ -156,4 +140,24 @@ public class BaseSteps extends WebDriverProvider {
             System.out.println("================================================");
         }
     }
+
+    @AfterMethod(alwaysRun = true)
+    public void tearDown(ITestResult iTestResult) throws IOException {
+        Log4jUtils.info("Updating result of script " + iTestResult.getName() + " to report :: updateTestStatus");
+        if (iTestResult.getStatus()==ITestResult.FAILURE){
+            File screenshot = AllureListener.takeScreenshot(WebDriverProvider.getDriver(), iTestResult.getName());
+            Allure.addAttachment("Page Screenshot", FileUtils.openInputStream(screenshot));
+        }
+        try {
+            System.out.println("Closing browser in tearDown After Method");
+            DriverFactory.getInstance().removeDriver();
+        } catch (Exception e){
+            System.out.println("exit");
+            Allure.addAttachment("Close Browser in tearDown FAILED (Potentially crashed)", e.getMessage());
+        }
+        finally {
+            DriverFactory.getInstance().removeDriverFromThreadLocal();
+        }
+    }
+
 }

@@ -26,7 +26,7 @@ public class LoginTests extends BaseSteps {
         LoginPage loginPage = LoginPage.getInstance();
         loginPage.goToLoginPage();
         loginPage.login("fodend1706@gmail.com", "Password@01");
-        Assert.assertTrue(LoginPage.getInstance().verifyLoginSuccessfully("route=account/account"),"Login failed");
+        Assert.assertTrue(loginPage.verifyLoginSuccessfully("route=account/account"),"Login failed");
     }
 
     @Epic("FAS-7: Feature: Authentication - Authorization")
@@ -42,13 +42,13 @@ public class LoginTests extends BaseSteps {
         LoginPage loginPage = LoginPage.getInstance();
         loginPage.goToLoginPage();
         loginPage.login("fodend1706@gmail.com", "WrongPassword");
-        softAssert.assertTrue(LoginPage.getInstance().verifyLoginFailed("Warning: No match for E-Mail Address and/or Password."),"Expected login but there's no message indicate that the login attempt was failed.");
+        softAssert.assertTrue(loginPage.verifyLoginFailed("Warning: No match for E-Mail Address and/or Password."),"Expected login but there's no message indicate that the login attempt was failed.");
         loginPage.login("test@gmail.com","Password@01");
-        softAssert.assertTrue(LoginPage.getInstance().verifyLoginFailed("Warning: No match for E-Mail Address and/or Password."),"Expected login but there's no message indicate that the login attempt was failed.");
+        softAssert.assertTrue(loginPage.verifyLoginFailed("Warning: No match for E-Mail Address and/or Password."),"Expected login but there's no message indicate that the login attempt was failed.");
         loginPage.login("foden1706@gmail.com", "");
-        softAssert.assertTrue(LoginPage.getInstance().verifyLoginFailed("Warning: No match for E-Mail Address and/or Password."),"Expected login but there's no message indicate that the login attempt was failed.");
+        softAssert.assertTrue(loginPage.verifyLoginFailed("Warning: No match for E-Mail Address and/or Password."),"Expected login but there's no message indicate that the login attempt was failed.");
         loginPage.login("","Password@01");
-        softAssert.assertTrue(LoginPage.getInstance().verifyLoginFailed("Warning: No match for E-Mail Address and/or Password."),"Expected login but there's no message indicate that the login attempt was failed.");
+        softAssert.assertTrue(loginPage.verifyLoginFailed("Warning: No match for E-Mail Address and/or Password."),"Expected login but there's no message indicate that the login attempt was failed.");
         softAssert.assertAll();
     }
 
