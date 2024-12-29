@@ -109,13 +109,9 @@ public class LoginTests extends BaseSteps {
         initializeWebDriver();
         LoginPage loginPage = LoginPage.getInstance();
         loginPage.goToLoginPage();
-        loginPage.login("foden1707@gmail.com","wrongpwd");
-        loginPage.login("foden1707@gmail.com","wrongpwd");
-        loginPage.login("foden1707@gmail.com","wrongpwd");
-        loginPage.login("foden1707@gmail.com","wrongpwd");
-        loginPage.login("foden1707@gmail.com","wrongpwd");
-        loginPage.login("foden1707@gmail.com","wrongpwd");
-        Assert.assertTrue(loginPage.unsuccessfulLoginAtemptsDisplayedAfterFiveAttempts(),"Login attempts exceed was not displayed after 5 attempts with wrong password.");
+        loginPage.login("foden1709@gmail.com","wrongpwd");
+        loginPage.spamClickLogin(5);
+        Assert.assertTrue(loginPage.unsuccessfulLoginAtemptsDisplayedAfterFiveAttempts(),"Login attempts exceed was not displayed after a certain number of attempts with wrong password.");
     }
 
     @Epic("FAS-7: Feature: Authentication - Authorization")
