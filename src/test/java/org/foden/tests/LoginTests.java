@@ -16,7 +16,7 @@ public class LoginTests extends BaseSteps {
 
     @Epic("FAS-7: Feature: Authentication - Authorization")
     @Feature("FAS-11: Develope scripts for scenarios Login, Logout")
-    @Test(priority = 0,description = "Verify logging into the Application using valid credentials", groups = {"FAS-44", "FAS-11", TestGroups.Id.SMOKE, TestGroups.Id.REGRESSION})
+    @Test(priority = 0,description = "Verify logging into the Application using valid credentials", groups = {"FAS-44", "FAS-11", TestGroups.Id.SMOKE})
     @Story("FAS-44")
     @Severity(SeverityLevel.NORMAL)
     @Description("Verify logging into the Application using valid credentials")
@@ -31,7 +31,7 @@ public class LoginTests extends BaseSteps {
 
     @Epic("FAS-7: Feature: Authentication - Authorization")
     @Feature("FAS-11: Develope scripts for scenarios Login, Logout")
-    @Test(priority = 0,description = "Verify logging into the Application using invalid credentials", groups = {"FAS-45", "FAS-11", TestGroups.Id.SMOKE, TestGroups.Id.REGRESSION})
+    @Test(priority = 0,description = "Verify logging into the Application using invalid credentials", groups = {"FAS-45", "FAS-11", TestGroups.Id.SMOKE})
     @Story("FAS-45")
     @Severity(SeverityLevel.NORMAL)
     @Description("Verify logging into the Application using invalid credentials")
@@ -54,7 +54,7 @@ public class LoginTests extends BaseSteps {
 
     @Epic("FAS-7: Feature: Authentication - Authorization")
     @Feature("FAS-11: Develope scripts for scenarios Login, Logout")
-    @Test(priority = 0,description = "Verify 'Forgotten Password' link is available in the Login page and is working", groups = {"FAS-47", "FAS-11", TestGroups.Id.SMOKE, TestGroups.Id.REGRESSION})
+    @Test(priority = 0,description = "Verify 'Forgotten Password' link is available in the Login page and is working", groups = {"FAS-47", "FAS-11", TestGroups.Id.SMOKE})
     @Story("FAS-47")
     @Severity(SeverityLevel.NORMAL)
     @Description("Verify 'Forgotten Password' link is available in the Login page and is working")
@@ -70,7 +70,7 @@ public class LoginTests extends BaseSteps {
 
     @Epic("FAS-7: Feature: Authentication - Authorization")
     @Feature("FAS-11: Develope scripts for scenarios Login, Logout")
-    @Test(priority = 0,description = "Verify E-Mail Address and Password text fields in the Login page have the place holder text ", groups = {"FAS-48", "FAS-11", TestGroups.Id.SMOKE, TestGroups.Id.REGRESSION})
+    @Test(priority = 0,description = "Verify E-Mail Address and Password text fields in the Login page have the place holder text ", groups = {"FAS-48", "FAS-11", TestGroups.Id.REGRESSION})
     @Story("FAS-48")
     @Severity(SeverityLevel.NORMAL)
     @Description("Verify E-Mail Address and Password text fields in the Login page have the place holder text ")
@@ -84,7 +84,7 @@ public class LoginTests extends BaseSteps {
 
     @Epic("FAS-7: Feature: Authentication - Authorization")
     @Feature("FAS-11: Develope scripts for scenarios Login, Logout")
-    @Test(priority = 0,description = "Verify the different ways of navigating to the Login page", groups = {"FAS-52", "FAS-11", TestGroups.Id.SMOKE, TestGroups.Id.REGRESSION})
+    @Test(priority = 0,description = "Verify the different ways of navigating to the Login page", groups = {"FAS-52", "FAS-11", TestGroups.Id.REGRESSION})
     @Story("FAS-52")
     @Severity(SeverityLevel.NORMAL)
     @Description("Verify the different ways of navigating to the Login page")
@@ -100,7 +100,7 @@ public class LoginTests extends BaseSteps {
 
     @Epic("FAS-7: Feature: Authentication - Authorization")
     @Feature("FAS-11: Develope scripts for scenarios Login, Logout")
-    @Test(priority = 0,description = "Verify the number of unsucessful login attemps", groups = {"FAS-59", "FAS-11", TestGroups.Id.SMOKE, TestGroups.Id.REGRESSION})
+    @Test(priority = 0,description = "Verify the number of unsucessful login attemps", groups = {"FAS-59", "FAS-11", TestGroups.Id.SMOKE})
     @Story("FAS-59")
     @Severity(SeverityLevel.NORMAL)
     @Description("Verify the number of unsucessful login attemps")
@@ -120,7 +120,7 @@ public class LoginTests extends BaseSteps {
 
     @Epic("FAS-7: Feature: Authentication - Authorization")
     @Feature("FAS-11: Develope scripts for scenarios Login, Logout")
-    @Test(priority = 0,description = "Verify the Breakcrumb, Page Heading, Page Title and Page URL of Login page", groups = {"FAS-53", "FAS-11", TestGroups.Id.SMOKE, TestGroups.Id.REGRESSION})
+    @Test(priority = 0,description = "Verify the Breakcrumb, Page Heading, Page Title and Page URL of Login page", groups = {"FAS-53", "FAS-11", TestGroups.Id.SMOKE})
     @Story("FAS-53")
     @Severity(SeverityLevel.NORMAL)
     @Description("Verify the Breakcrumb, Page Heading, Page Title and Page URL of Login page")
