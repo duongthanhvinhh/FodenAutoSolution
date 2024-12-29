@@ -10,6 +10,7 @@ pipeline {
     }
     environment {
         ALLURE_RESULTS_DIR = "allure-results-${env.BUILD_NUMBER}"
+        PATH = "/usr/local/bin:$PATH"
     }
     stages {
         stage('Prepare Workspace') {
